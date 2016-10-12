@@ -45,6 +45,7 @@ body {
 	position: relative;
 	padding: 0px 10px 0px 10px;
 	display:  inline-block;
+	text-decoration: none;
 }
 
 /* hide dropdown menus */
