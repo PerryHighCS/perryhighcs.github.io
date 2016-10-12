@@ -52,6 +52,14 @@ body {
     box-flex: 0;
 }
 
+#links {
+	display: none;
+}
+
+#nav:hover #links {
+	display: block;
+}
+
 #nav h1 {
 	font-size:120%;
 	background-color: #eee;
