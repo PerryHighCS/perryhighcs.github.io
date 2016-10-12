@@ -11,7 +11,7 @@ body {
 #wrapper {
 	width:900px;
 	margin:0px auto;
-	border:1px solid #bbb;
+	border:0px;
 	padding:10px;
 }
 
@@ -19,8 +19,9 @@ body {
 	
 }
 
-#nav {
-	float: left;
+#nav {        
+	height:auto;
+    position:relative;
 }
 
 #nav ul {
