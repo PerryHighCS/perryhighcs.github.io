@@ -59,7 +59,9 @@ body {
 }
 
 /* Show dropdown when hovering over its menu */
-.menu:hover .dropdown, .menu:focus .dropdown {
+.menu:active .dropdown, 
+.menu:focus .dropdown,
+.menu:active .dropdown {
 	display: block;
 }
 
