@@ -21,7 +21,16 @@ body {
 
 #nav {        
 	height:auto;
-    position:relative;
+	position:relative;
+	float:left;
+}
+
+#nav h1 {
+	font-size:150%;
+}
+
+#nav h2 {
+	font-size:100%;	
 }
 
 #nav ul {
