@@ -53,5 +53,5 @@ body {
 }
 
 #nav li a::before {
-	content: "\27BA";
+	content: "\27BA&nbsp;";
 }
