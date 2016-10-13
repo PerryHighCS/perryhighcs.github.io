@@ -106,7 +106,8 @@ and (max-device-width : 900px) {
 
 .center {
 	position: relative;
-	border: 3px solid green; 
+	border: 3px solid green;
+	margin: 0 auto;
 }
 
 .center p {
@@ -119,5 +120,5 @@ and (max-device-width : 900px) {
 
 .narrowblock {
 	display: block;
-	width: 200px;
+	width: 250px;
 }
