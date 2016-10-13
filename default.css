@@ -38,6 +38,7 @@ and (max-device-width : 900px) {
 
 .main {
 	padding: 10px;
+	
 }
 
 .menubar {
@@ -112,9 +113,9 @@ and (max-device-width : 900px) {
 
 .center {
 	position: relative;
-	border: 3px solid green;
+	border: 3px solid grey;
 	padding: 10px;
 	top: 50%;
 	left: 50%;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%);
 }
