@@ -108,7 +108,7 @@ and (max-device-width : 900px) {
 
 .narrowblock {
 	display: block;
-	width: 250px;
+	width: 300px;
 }
 
 .center {
