@@ -112,7 +112,7 @@ and (max-device-width : 900px) {
 }
 
 .center {
-	position: relative;
+	position: absolute;
 	border: 3px solid grey;
 	padding: 10px;
 	top: 50%;
