@@ -105,6 +105,9 @@ and (max-device-width : 900px) {
 	content: "\27BA\00A0";
 }
 
+.tiny {
+    font-size: .5em
+}
 .quote {
     
 }
