@@ -1,3 +1,7 @@
+html, body {
+    min-height: 100%;
+}
+
 body {
 	font-family:arial,helvetica,sans-serif;
 	font-size:16px;
@@ -11,7 +15,7 @@ body {
 	width:900px;
 	margin: 0px auto;
 	padding: 0px;
-	height: 100vh;
+	min-height: 100vh;
 	background-color: #fff;
 }
 
@@ -21,7 +25,9 @@ and (min-device-width : 320px)
 and (max-device-width : 900px) {
 /* Styles */
 
-.page {	width:100%; }
+    .page {
+        width:100%; 
+    }
 }
 
 .title {
@@ -33,7 +39,10 @@ and (max-device-width : 900px) {
 }
 
 .wrapper {
-	margin:0px auto;
+    /*display: flex;
+    flex-flow:column;*/
+    margin:0px auto;
+    height: 100%;
 }
 
 .main {
@@ -137,4 +146,8 @@ and (max-device-width : 900px) {
 
 .attribution {
 	text-align: right;
+}
+
+#gearBackground {
+    position: absolute;
 }
