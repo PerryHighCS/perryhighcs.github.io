@@ -1,0 +1,196 @@
+
+<!-- saved from url=(0035)https://bakerfranke.github.io/apml/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>APML - The DIY AP markup language</title>
+  
+   <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" type="text/css" href="blockStyles.css">
+
+</head>
+<body>
+  <div class="container-fluid">
+    <h2>
+    Welcome to APBML - AP Block Markup Language
+    </h2>
+    <em>the DIY, roll-your-own ASCII-2-AP block code tool.</em> | © Baker Franke 2017<br>
+	Copied from <a href="https://bakerfranke.github.io/apml/">Barker Franke's Github</a><br>
+    <hr>
+    <div class="myCol">
+      <div class="colheading" id="apmlHelp" style="display: none;">
+        <strong>Input: apml</strong><br>
+        <code>[block], |val|, (cond),  <br>2-spaces=tab, &lt;- = arrow</code>
+      </div>
+      <div class="colheading" id="apHelp" style="">
+        <strong>Input: AP Pseudocode</strong><br>
+        <code>2-spaces=tab, &lt;- = arrow,<br> {} should be on own line</code>
+      </div>
+      <div id="input" class="myCol">
+        <textarea id="code" style="margin: 0px; width: 372px; height: 320px;">user &lt;- INPUT()
+rand &lt;- RANDOM (0, 100)
+REPEAT UNTIL ( user = rand )
+{
+  DISPLAY ("guess again!")
+  IF (user &lt; rand)
+  {
+    DISPLAY ("Higher")
+  }
+  ELSE
+  {
+    DISPLAY ("Lower")
+  }
+  user &lt;- INPUT()
+}
+DISPLAY ("You got it!")
+          </textarea>
+          <input type="radio" name="codeType" value="ap" checked="">AP Pseudocode
+          <input type="radio" name="codeType" value="apml">APML<br>          
+          <!--<select id="loadSample">
+            <option value="" selected> -- Load APML Sample --</option>
+            <option value="if">If Statement</option>
+            <option value="foreach">For Each Loop</option>
+            <option value="robot">Repeat Loop (with robot)</option>
+            <option value="procedure">Procedure </option>
+          </select><br>-->
+          <button id="saveInput" alt="copies code from here into saved area">Prepend to Saved Area</button>
+
+      </div>
+    </div>
+
+    <div class="myCol">
+      <div class="colheading">
+        <strong>Rendered Blocks</strong><br>
+        font-size: <input type="range" min="6" max="40" value="12" style="width: 50px" id="fSize"><span id="fSizeout">25</span><br> 
+        <em>(<span id="APblocks_width">389</span> x <span id="APblocks_height">478</span>)</em>
+      </div>
+      <div id="renderedHtml" class="myCol">
+        <div id="APblocks" style="font-size: 25px;"><bl>user ← <bl>INPUT</bl></bl><br>
+<bl>rand ← <bl>RANDOM <val>0, 100</val></bl></bl><br>
+<bl class="dark">REPEAT UNTIL <cond> user = rand </cond><br>
+&nbsp;&nbsp; <bl><bl>DISPLAY <val>"guess again!"</val></bl><br>
+<bl class="dark">IF <cond>user &lt; rand</cond><br>
+&nbsp;&nbsp; <bl><bl>DISPLAY <val>"Higher"</val></bl><br>
+</bl><br>
+ELSE<br>
+&nbsp;&nbsp; <bl><bl>DISPLAY <val>"Lower"</val></bl><br>
+</bl></bl><br>
+<bl>user ← <bl>INPUT</bl></bl><br>
+</bl></bl><br>
+<bl>DISPLAY <val>"You got it!"</val></bl><br>
+<br>
+</div>
+      </div> 
+    </div>
+
+    <div class="myCol">
+      <div class="colheading">
+        <strong>HTML to Copy:</strong>
+      </div>
+      <div id="htmlCodeOut" class="myCol">
+        <textarea id="htmlOut">&lt;div id='APblocks'&gt;
+&lt;bl&gt;user &amp;larr; &lt;bl&gt;INPUT&lt;/bl&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;bl&gt;rand &amp;larr; &lt;bl&gt;RANDOM &lt;val&gt;0, 100&lt;/val&gt;&lt;/bl&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;bl class='dark'&gt;REPEAT UNTIL &lt;cond&gt; user = rand &lt;/cond&gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &lt;bl&gt;&lt;bl&gt;DISPLAY &lt;val&gt;"guess again!"&lt;/val&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;bl class='dark'&gt;IF &lt;cond&gt;user &lt; rand&lt;/cond&gt;&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &lt;bl&gt;&lt;bl&gt;DISPLAY &lt;val&gt;"Higher"&lt;/val&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;/bl&gt;&lt;br&gt;
+ELSE&lt;br&gt;
+&amp;nbsp;&amp;nbsp; &lt;bl&gt;&lt;bl&gt;DISPLAY &lt;val&gt;"Lower"&lt;/val&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;/bl&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;bl&gt;user &amp;larr; &lt;bl&gt;INPUT&lt;/bl&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;/bl&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;bl&gt;DISPLAY &lt;val&gt;"You got it!"&lt;/val&gt;&lt;/bl&gt;&lt;br&gt;
+&lt;br&gt;
+
+&lt;/div&gt;</textarea><br>
+        <div style="width: 200px">
+        (this HTML creates the blocks at left using this: <a href="blockStyles.css">blockStyles.css</a> stylesheet)</div>
+      </div>
+    </div>
+
+    <div class="myCol">
+      <div class="colheading">
+        <strong>Saved Code</strong><br>
+        <div style="width: 200px">(Simple concatented text in reverse-chrno order, saved to local storage.)</div>
+      </div>
+       <div id="savedArea" class="myCol">
+        <textarea id="savedCode" style="margin: 0px; height: 389px; width: 618px;"></textarea><br>
+        <button id="updateSavedCode_btn" alt="Saves Locally.">Save</button>
+      </div>
+    </div>
+    
+    
+   
+   
+
+
+  <div style="clear: both">
+   
+  </div>
+  <hr>
+
+  <h3> Intructions: </h3>
+
+  <strong>What this is:</strong>
+    <p>
+      A hacked together janky string parser that lets you dictate how and where AP CSP-style blocks are drawn by converting from AP CSP Pseudocode, or from using a markup language that I made up and am calling APML - AP Markup Language. 
+    </p>
+
+  <strong>What this is NOT:</strong>
+    <p>
+      This is NOT an AP pseudocode complier, validator, coding environment, or any other thing that might lead you to believe this is doing something beyond drawing pretty picutres on the screen.
+    </p>
+    <p>
+      It will NOT ensure you write valid AP-style pseudocode or blocks. Basically, it will let you write incorrect code.  Consider this as freedom from constraints.
+    </p>
+
+  <strong>What problem does it solve?</strong>
+    <p>
+    Writing the text-based form of AP pseduocode is easy. Drawing the blocks is anoying so this helps you automate it to some degree. With this tool you can quickly construct AP-style block code. 
+    </p>
+    <p> 
+      The main thing you might want is to screen-cap an image of the code for use on handouts, quizzes, etc. You can also easily copy out the HTML - the same code that is rendered on the screen - for use on your own site.  You'll need the <a href="blockStyles.css">blockStyles.css</a> file that accompanies it.  Yes, I made up my own arbitrary tags.  
+    </p>
+
+  <strong>Mileage may vary on toggling back and forth between AP pseudocode and APML</strong>
+  <p>
+    The code that process the AP pseudocode into APML and vice versa is not robust (and under the hood extremely finiky).  It does a pretty good job in most circumstances but you might notice little artifacts get introduced along the way.  If this happens, I told you so.  You'll have to clean up your own mess.
+  </p>
+  <p>
+    If AP pseudocode doesn't convert nicely, just switch to APML and do the formatting by hand.
+  </p>
+
+  <strong>How does APML work?</strong>
+  <p>
+    First, APML is completely made up...by me...for purposes of this app.  So you know, good luck.
+  </p>
+  <p>
+      Think of apml as a weird hybrid a drawing tool.  You type ASCII text in the input box and special characters are interpreted to draw AP-style blocks.  There are really only 6 special characters: <code> [ ] ( ) | &lt;- </code> (square brackets, parentheses, pipes, and left-arrow).
+  </p>
+
+  <p> Here's how to use it:<br>
+  <img src="apml_example2.gif">
+  </p>
+  <p>
+    Mini doc:
+  </p>
+  <ol>
+  <li><code>[ <em>code</em> ]</code> -- Rounded Rectangle - used by most ap-style statements. e.g. <code>[a &lt;- 7]</code></li>
+  <li><code>( <em>condition</em> )</code> -- Oval - used by conditions and conditional expressions</li>
+  <li><code>| <em> value/expr</em> |</code> -- Square Rectangle - used for arguments, parameters and some expressions</li>
+  <li><code> &lt;- </code> -- Converts to left arrow symbol: ←</li> 
+  <li>(2 spaces) -- use for indenting. Single spaces are ignored.</li>
+  </ol>
+  Half-thing: making blocks gray<br>
+  <li><code>IF, REPEAT, PROCEDURE, FOR</code> -- The interpreter will recognize these keywords and make the block be shaded in gray.  <strong>You don't have to do anything to make the blocks gray.</strong>  It is done auto-magically.</li>
+
+</div> <!-- close container -->
+<hr>
+<p> APML and AP-to-blocks converter. © Baker Franke 2017</p> 
+<p>
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="88x31.png"></a><br>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</p>
+
+<script type="text/javascript" src="apml.js"></script>
+
+</body>
+/html>
