@@ -63,13 +63,11 @@
 
         return obj;
       }
-      
-      var body = document.body;
-      
+            
       var h = document.createElement("H1");
-      body.appendChild(h);
-      h.textContent = getAllUrlParameters().message;
-      
+      var txt = document.createTextNode(getAllUrlParameters().message);
+      h.appendChild(txt);      
+      document.body.appendChild(h);      
     </script>
   </head>
   <body>
