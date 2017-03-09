@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<link href="prism.css" rel="stylesheet" />
+	 <script
+  src="https://code.jquery.com/jquery-3.1.1.js"
+  integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+  crossorigin="anonymous"></script>
+	<script src="prism.js"></script>
+	<!-- Baker Check out http://jsfiddle.net/KJW4E/905/ for clipboard image paste -->
+	<!-- And here's a way to make images draggable http://jsfiddle.net/Zevan/QZejF/3/  -->
+	<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-57319800-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+<style>
+	body{
+
+		font-family: sans-serif;
+		font-size: 12px;
+		margin-left: 30px;
+
+	}
+	#canvas{
+		width: 100%;
+		height: 100%;
+		background-color: rgba(255, 0, 0, 0.0);
+		position: absolute;
+		z-index: 999;
+		cursor: crosshair;
+
+
+	}
+
+	#theCode{
+		width: 500px; 
+
+		min-height: 200px;
+
+		font-family: monospace;
+		resize: both;
+
+	}
+	h1{
+		-webkit-margin-after: 0px;
+	}
+	.noblock{
+		display: inline;
+	}
+
+	</style>
+</head>
+<body>
+	
+	
+	<div id="inputArea">
+	<h1 class="noblock">AP PT CodePrint</h1>  <strong>&copy;</strong> Baker Franke 2017<br>
+	<em>A one-stop shopping browser tool for preparing your code to submit for the AP CSP Performance Tasks.<br>
+	If you can print a PDF from the browser, this should be everything you need.</em> <strong>&copy;</strong> Baker Franke 2017<br><br>
+	
+	1. Type (or paste) your code into the big box below.  Click this button <button id="doit">Prettify</button> if it doesn't automagically pretty-ify. <br>
+	Optionally add a title or other text to show as a header.<br>
+	Project Title: <input type="text" id="projTitleInput">  Other Text: <input type="text" id="otherTextInput"><br>
+	<textarea id="theCode" >
+var difficulty = 15;
+var correctSquare;
+var p1Score = 0;
+var p2Score = 0;
+var currentPlayer = 1;
+
+function updateScore(scoreChange){
+  if(currentPlayer == 1){
+    p1Score += scoreChange;
+    setText("score1", p1Score);
+  }
+  else{
+    p2Score += scoreChange;
+    setText("score2", p2Score);
+  }
+}
+</textarea><br>
+2. Set font size and draw shapes on the code 3. Hide the controls 4. Print to PDF from the browser<br>
+Font Size: <input id="fontSize" type="range" min="1" max="40" step="1" value="12"><span id="fontSizeDisplay">12px</span> |
+Draw Shape:  <input type="radio" name="drawShapeToggle" value="rect" checked>Rectangle <input type="radio" name="drawShapeToggle" value="oval">Oval <button id="clearRect">Clear Rect</button> <button id="clearOval">Clear Oval</button>
+
+</div>
+<button id="hideBtn">Hide/Show Controls</button>
+<hr>
+<h1 id="projTitle"></h1>
+<em><span id="otherText"></span></em><br>
+<svg id="canvas">
+  <ellipse id="myOval" cx="0" cy="0" rx="0" ry="0" stroke="rgba(0,0,255,0.5)" stroke-width="4" fill="rgba(0,0,0,0)"/>
+  <rect id="myRect" x="0" y="0" width="0" height="0" stroke="rgba(255,0,0,0.5)" stroke-width="3" fill="rgba(0,0,0,0)"  />
+</svg>
+<pre id="outerPrettyArea" class="line-numbers language-javascript">
+<code id="prettyArea" class="language-javascript"></code>
+</pre><hr>
+Made with CodePrint using <a href="http://prismjs.com">Prism</a>
+
+<!-- 
+<hr><hr>
+1. Copy image data into clipboard or press Print Screen <br>
+2. Press Ctrl+V (page/iframe must be focused):
+<br /><br />
+<canvas style="border:1px solid grey;" id="my_canvas" width="300" height="300"></canvas>
+
+-->
+	<script src="prism.js"></script>
+	<script type="text/javascript">
+
+		document.getElementById("theCode").addEventListener("input", convert);
+
+		$("#hideBtn").click(function(){
+			$("#inputArea").toggle();
+		});
+
+		$("#doit").click(function(){
+			convert();
+		});
+
+		function convert(){
+			var code = $("#theCode").val();
+			var html = Prism.highlight(code, Prism.languages.javascript);
+			$("#prettyArea").html(html);
+			Prism.highlightAll();
+
+			//make sure the canvas height stretches to match the pretty code
+			$("#canvas").height($("#outerPrettyArea").height()+20);
+
+		}
+
+		convert();
+
+		/////// CODE TO DO SVG DRAWING /////
+
+		var drawShapeId = "#myRect";
+		var down = false;
+		var startPos = null;
+		boundingRect = {}
+		boundingRect.x = -1;
+		boundingRect.y = -1;
+		boundingRect.w = -1;
+		boundingRect.h = -1;
+
+		
+
+		$("#canvas").mousedown(function(e){
+			down = true;
+			startPos = {x:e.offsetX, y:e.offsetY};
+			boundingRect.x = e.offsetX;
+			boundingRect.y = e.offsetY; 
+			drawShape(drawShapeId, boundingRect);
+			//setPosition(drawShapeId, e.offsetX, e.offsetY);
+			
+		});
+
+		$("#canvas").mouseup(function(e){
+			down = false;
+			startPos = null;
+		});
+
+		$("#canvas").mousemove(function(e){
+
+			// var offset = {x: e.offsetX, y:e.offsetY}
+			// var page = {x: e.pageX, y: e.pageY}
+
+			// console.debug("offset: ", JSON.stringify(offset));
+			// console.debug("page: "+JSON.stringify(page));
+
+			if(down==true){
+				var xDiff = e.offsetX - startPos.x;
+				var yDiff = e.offsetY - startPos.y;
+
+				boundingRect.x = startPos.x;
+				boundingRect.y = startPos.y;
+				boundingRect.w = xDiff;
+				boundingRect.h = yDiff;
+
+				if(xDiff < 0 ){
+					boundingRect.x = startPos.x + xDiff;
+					boundingRect.w = -xDiff;
+				}
+
+				if(yDiff < 0){
+					boundingRect.y = startPos.y + yDiff;
+					boundingRect.h = -yDiff;
+				}
+
+
+				drawShape(drawShapeId, boundingRect);
+				// setPosition(drawShapeId, )
+				// setSize(drawShapeId, xDiff, yDiff);
+			}
+
+
+		});
+
+		function drawShape(svgObj, rect){
+
+			setSize(svgObj, rect.w, rect.h);
+
+			setPosition(svgObj, rect.x, rect.y);
+		}
+
+		function setSize(svgObjId, w, h){
+
+			var objw = $(svgObjId)[0].width; //assume it's a rect
+			var objh = $(svgObjId)[0].height;
+
+			if($(svgObjId).prop("tagName")=="ellipse"){ //if it's an ellipse we need rx, and ry
+				objw = $(svgObjId)[0].rx;
+				objh = $(svgObjId)[0].ry;
+
+				w = w/2;
+				h = h/2;
+			}
+
+			objw.baseVal.value = w;
+			objh.baseVal.value = h;
+
+		}
+
+		function setPosition(svgObjId, x, y){
+
+			var objx = $(svgObjId)[0].x; //assume it's a rect
+			var objy = $(svgObjId)[0].y;
+
+			if($(svgObjId).prop("tagName")=="ellipse"){ //if it's an ellipse we need cx, and cy
+				objx = $(svgObjId)[0].cx;
+				objy = $(svgObjId)[0].cy;
+
+				//modify x to account for center position and radius
+				//console.log("x before: "+x);
+				 //x += parseInt($("#myOval")[0].rx.baseVal.value/2);
+				 //y += parseInt($("#myOval")[0].ry.baseVal.value/2);
+				 x = boundingRect.x + boundingRect.w/2;
+				 y = boundingRect.y + boundingRect.h/2;
+				//console.log("x after: "+x);
+
+				
+
+			}
+
+
+			objx.baseVal.value = x;  // remainder of svg obj path.to.value is the same
+			objy.baseVal.value = y;
+		}
+		 //$('input[name=q12_3]:checked').val())
+
+		$("#clearOval").click(function(){
+			setSize("#myOval",0,0);
+		});
+
+		$("#clearRect").click(function(){
+			setSize("#myRect",0,0);
+		})
+		
+
+		 $("input[name='drawShapeToggle']").change(function(){
+
+		 	//console.log("toggle!!!");
+
+		 	var shapeVal = $("input[name='drawShapeToggle']:checked").val();
+
+		 	if(shapeVal=="oval"){
+		 		drawShapeId="#myOval";
+		 		//$("#shapeToggle").html("Draw Rect");
+		 	}
+		 	else{
+		 		drawShapeId="#myRect";
+		 		//$("#shapeToggle").html("Draw Oval");
+		 	}
+
+		    // debug("changed and val is: ")
+		    // codeType = $("input[name='codeType']:checked").val();
+
+		    // toggleCodeType(codeType);
+
+		});
+
+		$("#fontSize").change(setFontSize);
+
+    	document.getElementById("fontSize").addEventListener("input", setFontSize);
+
+		function setFontSize(){
+			var val = $("#fontSize").val()+"px"
+			$("#outerPrettyArea").css("font-size", val);
+			$("#fontSizeDisplay").html(val);
+
+			//make sure the canvas height stretches to match the pretty code
+			$("#canvas").height($("#outerPrettyArea").height()+20);
+		}
+
+		document.getElementById("projTitleInput").addEventListener("input", setTitle);
+		$("#projTitleInput").change(setTitle);
+		function setTitle(){
+			$("#projTitle").html($("#projTitleInput").val());
+		}
+
+		document.getElementById("otherTextInput").addEventListener("input", setOtherText);
+		$("#otherTextInput").change(setOtherText);
+		function setOtherText(){
+			$("#otherText").html($("#otherTextInput").val());
+		}
+
+		//////////////////// CLIPBOARD COPY PASTE //////////////////
+
+		var CLIPBOARD = new CLIPBOARD_CLASS("my_canvas", true);
+
+		/**
+		 * image pasting into canvas
+		 * 
+		 * @param {string} canvas_id - canvas id
+		 * @param {boolean} autoresize - if canvas will be resized
+		 */
+		function CLIPBOARD_CLASS(canvas_id, autoresize) {
+			var _self = this;
+			var canvas = document.getElementById(canvas_id);
+			var ctx = document.getElementById(canvas_id).getContext("2d");
+
+			//handlers
+			document.addEventListener('paste', function (e) { _self.paste_auto(e); }, false);
+
+			//on paste
+			this.paste_auto = function (e) {
+				if (e.clipboardData) {
+					var items = e.clipboardData.items;
+					if (!items) return;
+					
+					//access data directly
+					for (var i = 0; i < items.length; i++) {
+						if (items[i].type.indexOf("image") !== -1) {
+							//image
+							var blob = items[i].getAsFile();
+							var URLObj = window.URL || window.webkitURL;
+							var source = URLObj.createObjectURL(blob);
+							this.paste_createImage(source);
+						}
+					}
+					e.preventDefault();
+				}
+			};
+			//draw pasted image to canvas
+			this.paste_createImage = function (source) {
+				var pastedImage = new Image();
+				pastedImage.onload = function () {
+					if(autoresize == true){
+						//resize
+						canvas.width = pastedImage.width;
+						canvas.height = pastedImage.height;
+					}
+					else{
+						//clear canvas
+						ctx.clearRect(0, 0, canvas.width, canvas.height);
+					}
+					ctx.drawImage(pastedImage, 0, 0);
+				};
+				pastedImage.src = source;
+			};
+		}
+		
+	</script>
+</body>
+</html>
