@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+  <!-- //repl.it/embed/KNNx/1.js -->
+  <body>
+
+  <script>
+  var params = {};
+
+  if (location.search) {
+      var parts = location.search.substring(1).split('&');
+
+      for (var i = 0; i < parts.length; i++) {
+          var nv = parts[i].split('=');
+          if (!nv[0]) continue;
+          params[nv[0]] = nv[1] || true;
+      }
+  }
+
+  // Now you can get the parameters you want like so:
+  var src = '//repl.it/embed/' + params.src + '.js';
+
+  var script = document.createElement('script');
+  script.setAttribute('src', src);
+  document.head.appendChild(script);
+  </script>
+  </body>
+</html>
