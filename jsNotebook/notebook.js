@@ -1,4 +1,4 @@
-require.config({"codehs-js-utils": "/lib/libEditorUtils.js"
+require.config({"codehs-js-utils": "/lib/libEditorUtils.js",
                 "codehs-graphics": "/lib/graphics/graphics.js"
                });
 
