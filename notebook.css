@@ -7,8 +7,13 @@
     background-color: #FFF;
     max-width: 900px;
     padding: 10px;
-    margin: 8px auto;
+    margin: 8px auto 8px;
     font-family: "Calibri", sans-serif;
+  }
+
+  h1 {
+    border-bottom: 1px solid;
+    margin-bottom: 0px;
   }
 
   script.code {
