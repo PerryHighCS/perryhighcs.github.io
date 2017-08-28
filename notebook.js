@@ -90,3 +90,28 @@ function readFloat(promptTxt) {
     }
   }
 }
+
+// Ask the user for a boolean
+function readBoolean(promptTxt) {
+  // Store the user prompt
+  var text = promptTxt;
+
+  // Loop until we get our input
+  while (true) {
+    // Ask the user for the boolean
+    var rval = prompt(text).toLowerCase();
+
+    // If the user clicks cancel, throw an exception
+    if (rval === null) {
+      throw 'Exception: User Cancelled Input';
+    } else if (rval == 'true') {
+      return true;
+    } else if (rval == 'false') {
+      return false;
+    } else {
+      // If they did not enter a boolean, loop
+      text = promptTxt + "\nPlease enter true or false.";
+    }
+  }
+}
+
