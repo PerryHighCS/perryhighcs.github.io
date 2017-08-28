@@ -1,4 +1,4 @@
-requirejs(["/lib/libEditorUtils.js", "/lib/graphics/graphics.js"]);
+require(["/lib/libEditorUtils.js", "/lib/graphics/graphics.js"]);
 
 // Display text in a textArea console
 function print(text) {
