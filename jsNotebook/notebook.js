@@ -1,3 +1,5 @@
+requirejs(["/lib/libEditorUtils.js", "/lib/graphics/graphics.js"]);
+
 // Display text in a textArea console
 function print(text) {
   // Get a reference to the console
