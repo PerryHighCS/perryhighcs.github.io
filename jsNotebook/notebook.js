@@ -1,3 +1,7 @@
+require.config({"codehs-js-utils": "/lib/libEditorUtils.js"
+                "codehs-graphics": "/lib/graphics/graphics.js"
+               });
+
 require(["/lib/libEditorUtils.js", "/lib/graphics/graphics.js"]);
 
 // Display text in a textArea console
