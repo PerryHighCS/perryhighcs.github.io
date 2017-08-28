@@ -1,0 +1,48 @@
+
+  html {
+    background-color: #ddd;
+  }
+
+  body {
+    background-color: #FFF;
+    max-width: 900px;
+    padding: 10px;
+    margin: 8px auto;
+    font-family: "Calibri", sans-serif;
+  }
+
+  script.code {
+    display: block;
+    overflow: auto;
+    max-height: 600px;
+    font-family: monospace;
+    white-space: pre;
+    border: 1px solid;
+    background-color: #ccc;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 0px;
+  }
+
+  #Console {
+    display: none;
+    font-family: monospace;
+    white-space: pre;
+    width: 100%;
+    height: 200px;
+    max-height: 600px;
+    resize: vertical;
+    box-sizing: border-box;         /* For IE and modern versions of Chrome */
+    -moz-box-sizing: border-box;    /* For Firefox                          */
+    -webkit-box-sizing: border-box; /* For Safari                           */
+  }
+
+  .title {
+    display: block;
+    position: relative;
+    background-color: #777;
+  }
+
+  .title button {
+    margin: 2px 5px 2px 2px ;
+  }
