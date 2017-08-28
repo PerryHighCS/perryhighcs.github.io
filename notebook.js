@@ -104,9 +104,9 @@ function readBoolean(promptTxt) {
     // If the user clicks cancel, throw an exception
     if (rval === null) {
       throw 'Exception: User Cancelled Input';
-    } else if (rval == 'true') {
+    } else if (rval == 'true' || rval == 'yes') {
       return true;
-    } else if (rval == 'false') {
+    } else if (rval == 'false' || rval == 'no') {
       return false;
     } else {
       // If they did not enter a boolean, loop
