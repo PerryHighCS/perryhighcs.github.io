@@ -21,6 +21,25 @@ function println(text) {
   print(text + '\n');
 }
 
+function jserror(messageOrEvent, source, lineno, colno, error) {
+    if (source === '') {
+        source = ' at line ' + lineno;
+    }
+    else if (source.includes('notebook.js')) {
+        source = '';
+    }
+    else {
+        source = ' in ' + source + ' at line ' + lineno;
+    }
+    
+    if (typeof error === 'string') {
+        console.error(error + source);
+    }
+    else {
+        console.error(error.message + source);
+    }
+}
+
 if (!("_notebooklog" in console)) {
     console.log ("HERE");
     
@@ -30,9 +49,11 @@ if (!("_notebooklog" in console)) {
     console._notebookinfo = console.info;
     
     console.log = function(x) {println(x); console._notebooklog(x);};
-    console.error =  function(x) {println(x); console._notebookerror(x);};
-    console.warn =  function(x) {println(x); console._notebookwarn(x);};
-    console.info =  function(x) {println(x); console._notebookinfo(x);};
+    console.error =  function(x) {println('\u26D4 ' + x); console._notebookerror(x);};
+    console.warn =  function(x) {println('\u2757 ' + x); console._notebookwarn(x);};
+    console.info =  function(x) {println('\u2139 ' + x); console._notebookinfo(x);};
+    
+    window.onerror = jserror;
 }
 
 // Read a line of user input
