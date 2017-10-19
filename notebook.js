@@ -21,17 +21,22 @@ function println(text) {
   print(text + '\n');
 }
 
+// Display javascript errors in a slightly more friendly manner
 function jserror(messageOrEvent, source, lineno, colno, error) {
+    // If there is no source, create one with the given line number
     if (source === '') {
         source = ' at line ' + lineno;
     }
+    // If the source shows up as notebook.js, hide that fact (this code is perfect! /s)
     else if (source.includes('notebook.js')) {
         source = '';
     }
+    // Otherwise use the source file and line number
     else {
         source = ' in ' + source + ' at line ' + lineno;
     }
     
+    // Print out the error message
     if (typeof error === 'string') {
         console.error(error + source);
     }
@@ -40,6 +45,7 @@ function jserror(messageOrEvent, source, lineno, colno, error) {
     }
 }
 
+// Redirect javascript console error, log, and warning messages to println
 if (!("_notebooklog" in console)) {
     console.log ("HERE");
     
@@ -50,7 +56,7 @@ if (!("_notebooklog" in console)) {
     
     console.log = function(x) {println(x); console._notebooklog(x);};
     console.error =  function(x) {println('\u26D4 ' + x); console._notebookerror(x);};
-    console.warn =  function(x) {println('\u2757 ' + x); console._notebookwarn(x);};
+    console.warn =  function(x) {println('\u26A0 ' + x); console._notebookwarn(x);};
     console.info =  function(x) {println('\u2139 ' + x); console._notebookinfo(x);};
     
     window.onerror = jserror;
