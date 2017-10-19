@@ -21,6 +21,20 @@ function println(text) {
   print(text + '\n');
 }
 
+if (!("_notebooklog" in console)) {
+    console.log ("HERE");
+    
+    console._notebooklog = console.log;
+    console._notebookerror = console.error;
+    console._notebookwarn = console.warn;
+    console._notebookinfo = console.info;
+    
+    console.log = function(x) {println(x); console._notebooklog(x);};
+    console.error =  function(x) {println(x); console._notebookerror(x);};
+    console.warn =  function(x) {println(x); console._notebookwarn(x);};
+    console.info =  function(x) {println(x); console._notebookinfo(x);};
+}
+
 // Read a line of user input
 function readLine(promptTxt) {
   // Prompt the user for input
