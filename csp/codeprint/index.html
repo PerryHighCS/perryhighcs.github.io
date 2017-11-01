@@ -10,17 +10,7 @@
 	<script src="prism.js"></script>
 	<!-- Baker Check out http://jsfiddle.net/KJW4E/905/ for clipboard image paste -->
 	<!-- And here's a way to make images draggable http://jsfiddle.net/Zevan/QZejF/3/  -->
-	<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-57319800-3', 'auto');
-  ga('send', 'pageview');
-
-</script>
-
+        <title>codePrint</title>
 <style>
 	body{
 
@@ -75,7 +65,7 @@
 	
 	1. Type (or paste) your code into the big box below.  Click this button <button id="doit">Prettify</button> if it doesn't automagically pretty-ify. <br>
 	Optionally add a title or other text to show as a header.<br>
-	Project Title: <input type="text" id="projTitleInput">  Other Text: <input type="text" id="otherTextInput"><br>
+        Project Title: <input type="text" id="projTitleInput" value="My Awesome Project"> Other Text: <input type="text" id="otherTextInput" value="A short description of My Awesome Project"><br>
 	<textarea id="theCode" >
 var difficulty = 15;
 var correctSquare;
@@ -101,8 +91,8 @@ Draw Shape:  <input type="radio" name="drawShapeToggle" value="rect" checked>Rec
 </div>
 <button id="hideBtn">Hide/Show Controls</button>
 <hr>
-<h1 id="projTitle"></h1>
-<em><span id="otherText"></span></em><br>
+<h1 id="projTitle">My Awesome Project</h1>
+<em><span id="otherText">A short description of My Awesome Project</span></em><br>
 <svg id="canvas">
   <ellipse id="myOval" cx="0" cy="0" rx="0" ry="0" stroke="rgba(0,0,255,0.5)" stroke-width="4" fill="rgba(0,0,0,0)"/>
   <rect id="myRect" x="0" y="0" width="0" height="0" stroke="rgba(255,0,0,0.5)" stroke-width="3" fill="rgba(0,0,0,0)"  />
@@ -151,7 +141,7 @@ Made with CodePrint using <a href="http://prismjs.com">Prism</a>
 		var drawShapeId = "#myRect";
 		var down = false;
 		var startPos = null;
-		boundingRect = {}
+		boundingRect = {};
 		boundingRect.x = -1;
 		boundingRect.y = -1;
 		boundingRect.w = -1;
@@ -182,7 +172,7 @@ Made with CodePrint using <a href="http://prismjs.com">Prism</a>
 			// console.debug("offset: ", JSON.stringify(offset));
 			// console.debug("page: "+JSON.stringify(page));
 
-			if(down==true){
+			if(down===true){
 				var xDiff = e.offsetX - startPos.x;
 				var yDiff = e.offsetY - startPos.y;
 
@@ -222,7 +212,7 @@ Made with CodePrint using <a href="http://prismjs.com">Prism</a>
 			var objw = $(svgObjId)[0].width; //assume it's a rect
 			var objh = $(svgObjId)[0].height;
 
-			if($(svgObjId).prop("tagName")=="ellipse"){ //if it's an ellipse we need rx, and ry
+			if($(svgObjId).prop("tagName")==="ellipse"){ //if it's an ellipse we need rx, and ry
 				objw = $(svgObjId)[0].rx;
 				objh = $(svgObjId)[0].ry;
 
@@ -240,7 +230,7 @@ Made with CodePrint using <a href="http://prismjs.com">Prism</a>
 			var objx = $(svgObjId)[0].x; //assume it's a rect
 			var objy = $(svgObjId)[0].y;
 
-			if($(svgObjId).prop("tagName")=="ellipse"){ //if it's an ellipse we need cx, and cy
+			if($(svgObjId).prop("tagName")==="ellipse"){ //if it's an ellipse we need cx, and cy
 				objx = $(svgObjId)[0].cx;
 				objy = $(svgObjId)[0].cy;
 
@@ -268,7 +258,7 @@ Made with CodePrint using <a href="http://prismjs.com">Prism</a>
 
 		$("#clearRect").click(function(){
 			setSize("#myRect",0,0);
-		})
+		});
 		
 
 		 $("input[name='drawShapeToggle']").change(function(){
@@ -277,7 +267,7 @@ Made with CodePrint using <a href="http://prismjs.com">Prism</a>
 
 		 	var shapeVal = $("input[name='drawShapeToggle']:checked").val();
 
-		 	if(shapeVal=="oval"){
+		 	if(shapeVal==="oval"){
 		 		drawShapeId="#myOval";
 		 		//$("#shapeToggle").html("Draw Rect");
 		 	}
@@ -298,7 +288,7 @@ Made with CodePrint using <a href="http://prismjs.com">Prism</a>
     	document.getElementById("fontSize").addEventListener("input", setFontSize);
 
 		function setFontSize(){
-			var val = $("#fontSize").val()+"px"
+			var val = $("#fontSize").val()+"px";
 			$("#outerPrettyArea").css("font-size", val);
 			$("#fontSizeDisplay").html(val);
 
@@ -359,7 +349,7 @@ Made with CodePrint using <a href="http://prismjs.com">Prism</a>
 			this.paste_createImage = function (source) {
 				var pastedImage = new Image();
 				pastedImage.onload = function () {
-					if(autoresize == true){
+					if(autoresize === true){
 						//resize
 						canvas.width = pastedImage.width;
 						canvas.height = pastedImage.height;
