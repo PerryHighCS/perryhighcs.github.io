@@ -1,0 +1,463 @@
+<!doctype html>
+<html>
+    <head>
+        <title>PerryMa*tk Computer Science</title>    
+        <link rel="stylesheet" type="text/css" href="default.css">
+        <link rel="shortcut icon" type="image/png" href="/favicon.png">
+        <link rel="canonical" href="https://perryma.tk/" />
+        <script src="gears.js"></script>
+        <script src="https://use.fontawesome.com/8e8d811efd.js"></script>
+        <script src='https://code.jquery.com/jquery-3.2.1.min.js'></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            .example {
+                text-align: center;
+                background: #eee;
+                border: 1px solid black;
+                padding: 10px;
+            }
+                        
+            .bufferTable {
+                border: 0px;
+                border-spacing: 0px;
+                background: #fff;
+            }
+            
+            .bufferTable th,
+            .bufferTable td {
+                border: 1px solid black;
+                min-width: 1em;
+                padding: 3px;
+            }
+            
+            .filledCell {
+                background: #eee;
+                border: 0px;
+            }
+            
+            .tableContainer {
+                display: inline-block;
+                vertical-align: middle;
+            }
+            
+            #valuesTable {
+                background: #fff;
+                border: 1px solid black;
+                border-spacing: 0px;
+            }
+            
+            #valuesTable th {
+                text-align: right;
+            }
+            
+            #valuesTable th,
+            #valuesTable td {
+                padding: 5px;
+                min-width: 2em;
+            }
+            
+            #inputExample {
+                text-align: left;
+                background:#fff;
+                border: 1px solid black;
+                width: 10em;
+                height: 1em;
+                padding: 3px;
+                display: inline-block;
+            }
+            
+            div.startPos {        
+                position: absolute;
+                background:green;
+                transform: rotate(-90deg)
+                            translate(17px, -22px);
+                height: 16px;
+                width: 60px;  
+            }
+            
+            div.startPos:before {                
+                content: "Start ->";
+            }
+            
+            div.endPos {
+                position: absolute;
+                transform: rotate(-90deg)
+                            translate(17px, -22px);
+                height: 16px;
+                width: 60px;
+                background:red;            
+            }
+            
+            div.endPos:before {                
+                content: "End ->";
+            }
+            
+            .pointerRow td {
+                height: 60px;
+                width: 16px;
+            }
+        </style>
+    </head>
+    <body onload="//doGears(document.body);">
+        <div class="page">
+            <div class="title">
+                Perryma<span class="tiny"><i class="fa fa-cog fa-spin"></i></span>tk: Computer Science For Perry High School
+            </div>
+            <div class="wrapper">
+                <div class="menubar">
+                    <div class="menu" onclick="">
+                        <h1>Links</h1>
+                        <div class="dropdown">
+                            <ul>
+                                <li><a href="http://cusd80.com/Domain/3255">Perry High School</a></li>
+                                <li>
+                                    <h2>AP Computer Science A (Java)</h2>
+                                    <ul>
+                                        <li><a href="https://canvas.instructure.com/courses/1103154">Canvas</a></li>
+                                        <li><a href="http://cusdcte.com/moodle/login/index.php">CUSD Moodle</a></li>
+                                        <li><a href="http://www.javarepl.com/console.html">Java REPL</a></li>
+                                        <li><a href="https://github.com/">GitHub</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <h2><a href="/se">Software Engineering</a></h2>
+                                    <ul>
+                                        <li><a href="https://canvas.instructure.com/courses/1103177">Canvas</a></li>
+                                        <li><a href="https://codehs.com/">Code HS</a></li>
+                                        <li><a href="https://github.com/">GitHub</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <h2>AP Computer Science Principles</h2>
+                                    <ul>
+                                        <li><a href="https://canvas.instructure.com/courses/1103176">Canvas</a></li>
+                                        <li><a href="http://code.org">Code.org</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <h2>CPU Club</h2>
+                                    <ul>
+                                        <li><a href="/CPUClub">Club Page</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="main">
+                    <p>
+                        There are some cases where the most efficient solution 
+                        involves an array where we only use part of the array, a
+                        continuous set of elements that we are constantly adding
+                        elements to and removing elements from the beginning.
+                    </p>                    
+                    <p>
+                        This often comes up when we need a 
+                        <strong>buffer</strong>. Buffers are often used to 
+                        handle user input when it needs to be processed as it is
+                        typed. Input comes in from the user and is added to the
+                        end of the buffer. The program is handling the user's
+                        input one character at a time, so it removes the
+                        character from the beginning as it is handled.
+                    </p>
+                    <div class='example'>
+                    Buffer:&nbsp;<div id='inputExample'></div>
+                    </div>
+                    <p>
+                        When the buffer is using an array, it would be pointless
+                        to spend time moving everything around in the array so
+                        that the next element is at index 0 and the next
+                        character the user types is at the end.</p>
+                    <p> Moving things takes time-- you have to loop through the
+                        array copying elements. That could require thousands of
+                        operations and you don't want to waste that time.
+                    </p>
+                    <div class='example'>
+                        Buffer:&nbsp;
+                        <div class='tableContainer'>
+                            <table id='inputArray' class='bufferTable'>
+                                <thead>
+
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <p> We will normally just keep track of the next element in
+                        the array we need to process (the Start cell in the 
+                        example below).
+                    </p>
+                    <p> To see what is "in the buffer", you just
+                        look from the first element (the Start cell)
+                        forward "length" elements, when you get there you have
+                        the last element (End in the example below).
+                    </p>
+                    <p>
+                        In this way, the last element in the buffer may come
+                        before the first element. You just wrap around when you
+                        reach the end of the array.
+                    </p>
+                    <div class='example'>
+                        Buffer:&nbsp;
+                        <div class='tableContainer'>
+                            <table id='inputBuffer' class='bufferTable'>
+                                <thead>
+
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <p>
+                        The wrapping is really easy if you use the modulus 
+                        operator. Remember that modulus gives you the remainder
+                        after division. If you take an index MOD the length of
+                        the array (<code>int index = newIndex % arr.length;</code>),
+                        then your new index will be limited to the range 
+                        0..<code>arr.length-1</code> and the wrapping will be
+                        taken care of for you.
+                    </p>
+                    <div class='example'>
+                        <div class='tableContainer'>
+                            <table id='valuesTable'>
+                                <tbody>
+                                    <tr>
+                                        <th>Start:</th><td id='startVal'></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Length:</th><td id='lenVal'></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Start + Length:</th><td id='startLen'></td>
+                                    </tr>
+                                    <tr>
+                                        <th>(Start + Length) % buffer.length:</th><td id='startLenMod'></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        <script>            
+            var input = "I am a very smrt user.";
+            
+            setupInputExample();
+            setupArrayExample();
+            setupBufferExample();
+            
+            function setupInputExample() {
+                let start = 0;
+                
+                let container = $('#inputExample');
+                
+                setInterval(function() {
+                    let text = container.text();
+                    if (text.length > 0) {
+                        container.text(text.substring(1));
+                    }
+                }, 1000);
+                
+                setInterval(function() {
+                    let text = container.text();
+
+                    if (text.length === 0) {
+                        start = 0;
+                    }
+                    
+                    if (start < input.length) {
+                        text += input.charAt(start);
+                        start++;
+                    }                    
+                    container.text(text);
+                    
+                }, 200);
+            }
+                        
+            function setupArrayExample() {
+                let start = 0;
+                let len = 0;
+                let text = "";
+                let bufferCells = [];
+                
+                let head = $('#inputArray thead');
+                let body = $('#inputArray tbody');
+                
+                let headRow = $('<tr>');
+                head.append(headRow);
+                let bodyRow = $('<tr>');
+                body.append(bodyRow);
+                
+                // Create buffer table
+                for (let i = 0; i < input.length - 3; i++) {
+                    let cell = $('<th>');
+                    if (i === 0) {
+                        cell.text('index:');
+                    }
+                    else {
+                        cell.text(i - 1);
+                    }
+                    headRow.append(cell);
+                    
+                    cell = $('<td>');
+                    bodyRow.append(cell);
+                    cell.html('&nbsp;');
+                    
+                    if (i > 0) {
+                        bufferCells.push(cell);
+                    }
+                    else {
+                        cell.addClass('lenCell');
+                    }
+                }
+                
+                // Setup consumer
+                setInterval(function() {
+                    if (len > 0) {
+                        text = text.substring(1);
+                        len--;
+                    }
+                    updateBuffer(); 
+                }, 1000);
+                
+                // Setup producer
+                setInterval(function() {
+                    if (start < input.length) {
+                        text += input.charAt(start);                        
+                        len++;
+                        start++;
+                    }                    
+                    else if (len === 0) {                        
+                        start = 0;
+                    }
+                    updateBuffer();             
+                }, 300);
+                
+                function updateBuffer() {
+                    for (let i = 0; i < bufferCells.length; i++) {
+                        if (i < len) {
+                            bufferCells[i].text(text.charAt(i));
+                        }
+                        else {
+                            bufferCells[i].html('&nbsp;');
+                        }
+                    }    
+                    
+                    $('#inputArray .lenCell').html("Length:<br>" + len);
+                }
+            }
+            
+            function setupBufferExample() {
+                let pos = 0;
+                
+                let buffer = [];
+                let start = 0;
+                let len = 0;
+                
+                let bufferCells = [];
+                let pointerCells = [];
+                
+                let head = $('#inputBuffer thead');
+                let body = $('#inputBuffer tbody');
+                                
+                let headRow = $('<tr>');
+                head.append(headRow);
+                let bodyRow = $('<tr>');
+                body.append(bodyRow);
+                let pointerRow = $('<tr class="pointerRow">');
+                body.append(pointerRow);
+                
+                // Create buffer table
+                for (let i = 0; i < input.length - 3; i++) {
+                    let cell = $('<th>');
+                    if (i === 0) {
+                        cell.text('index:');
+                    }
+                    else {
+                        cell.text(i - 1);
+                    }
+                    headRow.append(cell);
+                    
+                    cell = $('<td>');
+                    bodyRow.append(cell);
+                    cell.html('&nbsp;');
+                    
+                    if (i > 0) {
+                        bufferCells.push(cell);
+                        buffer.push("");
+                    }
+                    else {
+                        cell.addClass('filledCell');
+                    }
+                    
+                    cell = $('<td>');
+                    pointerRow.append(cell);
+                    cell.html('&nbsp;');
+                                        
+                    if (i > 0) {
+                        let div = $('<div class="pointerCell">');
+                        pointerCells.push(div);
+                        cell.append(div);
+                    }
+                    else {
+                        cell.addClass('lenCell');
+                    }
+                }
+                
+                // Setup consumer
+                setInterval(function() {
+                    if (len > 0) {
+                        start = (start + 1) % buffer.length;
+                        len--;
+                    }                    
+                    updateBuffer(); 
+                }, 1000);
+                
+                // Setup producer
+                setInterval(function() {
+                    if (pos < input.length) {                        
+                        let c = input.charAt(pos);
+                        let end = (start + len) % buffer.length;
+                        buffer[end] = c;
+                        
+                        len++;
+                        pos++;
+                    }                    
+                    else if (len === 0) {                        
+                        pos = 0;                       
+                    }
+                    updateBuffer();
+                }, 300);
+                
+                function updateBuffer() {
+                    for (let i = 0; i < buffer.length; i++) {
+                        bufferCells[i].html('&nbsp;');
+                        pointerCells[i].removeClass('startPos');
+                        pointerCells[i].removeClass('endPos');
+                    }
+                    
+                    for (let i = start; i < start + len; i++) {
+                        let pos = i % buffer.length;
+                        bufferCells[pos].html(buffer[pos]);
+                    }
+                    
+                    pointerCells[start].addClass('startPos');
+                    pointerCells[(start+len)%buffer.length].addClass('endPos');
+                    
+                    $('#inputBuffer .lenCell').html("Length:<br>" + len);
+                    
+                    $('#startVal').text(start);
+                    $('#lenVal').text(len);
+                    $('#startLen').text(start + len);
+                    $('#startLenMod').text((start+len)%buffer.length)
+                }
+            }
+            
+        </script>
+    </body>
+</html>
