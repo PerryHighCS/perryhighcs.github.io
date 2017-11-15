@@ -98,7 +98,7 @@
             }
         </style>
     </head>
-    <body onload="//doGears(document.body);">
+    <body onload="start(); //doGears(document.body);">
         <div class="page">
             <div class="title">
                 Perryma<span class="tiny"><i class="fa fa-cog fa-spin"></i></span>tk: Computer Science For Perry High School
@@ -245,19 +245,19 @@
             </div>
         </div>    
         <script>
-            let inFrame = (self!==top);
-            
-            if (inFrame) {
-                $('.menubar').hide;
-            }
-            
-            
             var input = "I am a very smrt user.";
-            
-            setupInputExample();
-            setupArrayExample();
-            setupBufferExample();
-            
+
+            function start() {
+                let inFrame = (self!==top);
+
+                if (inFrame) {
+                    $('.menubar').hide;
+                }
+
+                setupInputExample();
+                setupArrayExample();
+                setupBufferExample();
+            }
             function setupInputExample() {
                 let start = 0;
                 
