@@ -245,16 +245,7 @@
             </div>
         </div>    
         <script>
-            let inFrame = false;
-            
-            try {
-                if (window.frameElement) {
-                    inFrame = true;
-                  }
-            }
-            catch (e) {
-                inFrame = true;
-            }
+            let inFrame = (self!==top);
             
             if (inFrame) {
                 $('.menubar').hide;
