@@ -244,7 +244,23 @@
                 </div>
             </div>
         </div>    
-        <script>            
+        <script>
+            let inFrame = false;
+            
+            try {
+                if (window.frameElement) {
+                    inFrame = true;
+                  }
+            }
+            catch (e) {
+                inFrame = true;
+            }
+            
+            if (inFrame) {
+                $('.menubar').hide;
+            }
+            
+            
             var input = "I am a very smrt user.";
             
             setupInputExample();
