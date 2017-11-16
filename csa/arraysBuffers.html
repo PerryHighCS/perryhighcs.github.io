@@ -216,7 +216,7 @@
                         The wrapping is really easy if you use the modulus 
                         operator. Remember that modulus gives you the remainder
                         after division. If you take an index MOD the length of
-                        the array (<code>int index = newIndex % arr.length;</code>),
+                        the array (<code>int newIndex = index % arr.length;</code>),
                         then your new index will be limited to the range 
                         0..<code>arr.length-1</code> and the wrapping will be
                         taken care of for you.
@@ -228,6 +228,7 @@
                                     <tr>
                                         <th>Start:</th><td id='startVal'></td>
                                     </tr>
+                                    
                                     <tr>
                                         <th>Length:</th><td id='lenVal'></td>
                                     </tr>
@@ -460,8 +461,9 @@
                     
                     $('#startVal').text(start);
                     $('#lenVal').text(len);
+                    
                     $('#startLen').text(start + len);
-                    $('#startLenMod').text((start+len)%buffer.length)
+                    $('#startLenMod').text((start+len)%buffer.length);
                 }
             }
             
