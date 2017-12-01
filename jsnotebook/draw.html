@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>      
+    <link href="/jsnotebook/notebook.css" rel="stylesheet" type="text/css" />   
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/jsnotebook/notebook.js"></script>
+    
+    <title>My JavaScript Notebook</title>
+  </head>
+
+  <body>
+    <div class="header"><!-- Title for this notebook page -->
+        <h1>My JavaScript Notebook: Drawing shapes</h1>
+        <div class="menubar"></div>
+    </div>
+    
+    <!-- Describe what this notebook page is showing -->
+    <p>
+      The second thing I learned about was drawing shapes.
+    </p>
+    
+    <!-- This is the code that will run -->
+    <div>
+      <div class="title"> <!-- title bar for the javascript code -->
+        <button onclick="start();">Run</button> <!-- Run button that calls start function when pressed -->
+        Draw Shapes<!-- Program title -->
+      </div>
+
+<script class="code line-numbers language-javascript">
+    // Test Code
+    function start() {
+        canvas.prepare();
+        canvas.setBackground("salmon");
+        
+        var r = new Rect(100, 100, 100, 50);
+        r.setColor("blue");
+        r.setLabel("Hi");
+
+        canvas.add(r);
+
+        var c = new Circle(850, 300, 10);
+        c.setColor("red");
+        canvas.add(c);
+
+        var l = new Line( 0, canvas.getHeight(), canvas.getWidth(), 0);
+        canvas.add(l);
+        
+        var t = new Text("Art:", canvas.getWidth() / 2, 30);
+        t.setFont("Serif");
+        t.setFontSize(50);
+        
+        canvas.add(t);
+        
+        var i = new Sprite(180, 50, "abstract-q-c-640-480-3.jpg");
+        canvas.add(i);
+        
+        canvas.draw();
+        
+        setInterval(function() {
+            i.setX(i.getX() + 1);
+            canvas.draw();
+            
+            if (mouseInfo.button(0)) {
+                console.log(canvas.getObjectAt(mouseInfo.x, mouseInfo.y));
+            }
+        }, 50);
+    }
+
+</script>
+      <canvas id="Drawing"></canvas> <!-- Graphics output canvas -->
+      <textarea id="Console"></textarea> <!-- Text output console -->
+    </div>
+  </body>
+</html>
