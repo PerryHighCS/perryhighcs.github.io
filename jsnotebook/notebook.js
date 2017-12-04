@@ -326,7 +326,7 @@ var canvas = new class {
      * @returns {Shape|undefined} the shape at the location or undefined if none
      */
     getObjectAt(x, y) {
-        let shapes = getObjectsAt(x, y);    
+        let shapes = this.getObjectsAt(x, y);    
         return shapes[shapes.length - 1];
     }
     
