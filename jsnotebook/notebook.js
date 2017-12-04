@@ -195,6 +195,21 @@ function readBoolean(promptTxt) {
   }
 }
 
+function rgb(red, green, blue) {
+    function toHex(val) {
+        if (val < 0) { val = 0; }
+        if (val > 255) { val = 255; }
+        val = Math.floor(val);
+        
+        if (val < 16) {
+            return "0" + val.toString(16);
+        }
+        return val.toString(16);
+    }
+    
+    return "#" + toHex(red) + toHex(green) + toHex(blue);
+}
+
 // Create a canvas singleton to control drawing
 var canvas = new class {
     constructor () {
