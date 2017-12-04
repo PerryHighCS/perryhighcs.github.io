@@ -195,6 +195,13 @@ function readBoolean(promptTxt) {
   }
 }
 
+/**
+ * Create an HTML rgb color from three color levels
+ * @param {Number} red the amount of red, 0-255
+ * @param {Number} green the amount of green, 0-255
+ * @param {Number} blue the amount of blue, 0-255
+ * @returns {String} A six digit html rgb color
+ */
 function rgb(red, green, blue) {
     function toHex(val) {
         if (val < 0) { val = 0; }
