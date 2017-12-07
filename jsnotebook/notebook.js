@@ -297,10 +297,11 @@ var canvas = new class {
         // Make the canvas the proper height
         canvas.setAttribute('width', this._width);
         canvas.setAttribute('height', this._height);
-        canvas.addEventListener('mousemove', function(evt){mouseInfo._mouseEvent(evt, this);});
-        canvas.addEventListener('mouseup', function(evt){mouseInfo._mouseEvent(evt, this);});
-        canvas.addEventListener('mousedown', function(evt){mouseInfo._mouseEvent(evt, this);});
-        canvas.addEventListener('mouseout', function(evt){mouseInfo._mouseEvent(null, this);});
+        canvas.addEventListener('mousemove', this._mouseEvt.bind(this));
+        canvas.addEventListener('mouseup', this._mouseEvt.bind(this));
+        canvas.addEventListener('mousedown', this._mouseEvt.bind(this));
+        canvas.addEventListener('mouseout', this._mouseEvt.bind(this));
+        canvas.addEventListener('click', this._mouseEvt.bind(this));
         canvas.addEventListener('contextmenu', (evt) => evt.preventDefault());
     }
     
@@ -356,6 +357,48 @@ var canvas = new class {
         return shapes;
     }
     
+    _mouseEvt(evt) {               
+        switch (evt.type) {
+            case "mousedown":
+                mouseInfo._mouseEvent(evt, this._canvas);
+                if (this._mouseDownFunction) {
+                    this._mouseDownFunction(mouseInfo.x, mouseInfo.y, mouseInfo.button(0), mouseInfo.button(1));
+                }
+                break;
+            case "mousemove":
+                mouseInfo._mouseEvent(evt, this._canvas);
+                if (this._mouseMoveFunction) {
+                    this._mouseMoveFunction(mouseInfo.x, mouseInfo.y, mouseInfo.button(0), mouseInfo.button(1));
+                }
+                break;
+            case "mouseup":
+                mouseInfo._mouseEvent(evt, this._canvas);
+                if (this._mouseUpFunction) {
+                    this._mouseUpFunction(mouseInfo.x, mouseInfo.y, mouseInfo.button(0), mouseInfo.button(1));
+                }
+                break;
+            case "mouseout":
+                mouseInfo._mouseEvent(null, this._canvas);
+                if (this._mouseOutFunction) {
+                    this._mouseOutFunction();
+                }
+                break;
+            case "click":
+                mouseInfo._mouseEvent(evt, this._canvas);
+                if (this._mouseClickFunction) {
+                    this._mouseClickFunction(mouseInfo.x, mouseInfo.y);
+                }
+                break;
+        }
+    }
+    
+    onMouseDown(func) {
+        this._mouseDownFunction = func;
+    }
+    onMouseMove(func) { this._mouseMoveFunction = func; }
+    onMouseUp(func) { this._mouseUpFunction = func; }
+    onMouseClick(func) { this._mouseClickFunction = func; }
+    onMouseOut(func) { this._mouseOutFunction = func; }
 };
 
 /**

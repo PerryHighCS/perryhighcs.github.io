@@ -56,13 +56,19 @@
         
         canvas.draw();
         
+
+        canvas.onMouseUp(
+                function(x, y, lbutton, rbutton) {
+                    console.log(lbutton + " " + rbutton + " " + x + " " + y);
+                }
+                );
+        
+        
         setInterval(function() {
             i.setX(i.getX() + 1);
             canvas.draw();
             
-            if (mouseInfo.button(0)) {
-                console.log(canvas.getObjectAt(mouseInfo.x, mouseInfo.y));
-            }
+            
         }, 50);
     }
 
