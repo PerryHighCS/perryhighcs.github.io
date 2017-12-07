@@ -422,6 +422,7 @@ class Shape {
         this._labelFont = "sans-serif";
         this._fontHeight = 20;
         this._fillColor = "#000";
+        this._outlineColor = null;
         this._text = "";
         this._measureLabel();
     }
@@ -631,7 +632,7 @@ class Circle extends Shape {
      * @returns {Circle}
      */
     constructor(x, y, radius) {
-        radius = radius | 5;
+        radius = radius || 5;
         super(x, y);
         this._radius = radius;
     }
@@ -680,7 +681,7 @@ class Circle extends Shape {
         }
         
         drawContext.beginPath();
-        drawContext.arc(this._x, this._y,  this._radius, 0, 2*Math.PI);
+        drawContext.arc(this._x, this._y, this._radius, 0, 2*Math.PI);
         
         if (this._fillColor) {
             drawContext.fill(); 

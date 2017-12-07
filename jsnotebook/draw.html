@@ -41,7 +41,11 @@
         var c = new Circle(850, 300, 10);
         c.setColor("red");
         canvas.add(c);
-
+        
+        c = new Circle(860, 300);
+        c.setColor("white");
+        canvas.add(c);
+        
         var l = new Line( 0, canvas.getHeight(), canvas.getWidth(), 0);
         canvas.add(l);
         
@@ -51,11 +55,10 @@
         
         canvas.add(t);
         
-        var i = new Sprite(180, 50, "abstract-q-c-640-480-3.jpg");
+        var i = new Sprite(180, 350, "abstract-q-c-640-480-3.jpg");
         canvas.add(i);
-        
+         
         canvas.draw();
-        
 
         canvas.onMouseUp(
                 function(x, y, lbutton, rbutton) {
