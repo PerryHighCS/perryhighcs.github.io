@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+  <head>
+    <title>PerryMa*tk Computer Science</title>    
+    <link rel="stylesheet" type="text/css" href="default.css">
+    <link rel="shortcut icon" type="image/png" href="/favicon.png">
+    <link rel="canonical" href="https://perryma.tk/" />
+    <script src="gears.js"></script>
+    <script src="https://use.fontawesome.com/8e8d811efd.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+<body onload="//doGears(document.body);">
+    <div class="page">
+      <div class="title">
+          Perryma<span class="tiny"><i class="fa fa-cog fa-spin"></i></span>tk: Computer Science For Perry High School
+      </div>
+      <div class="wrapper">
+        <div class="main">
+            Copy and paste your Infinite Campus Roster of students here:
+            <textarea id="pasted" onChange="processStudents()" onKeyPress="processStudents()"></textarea>
+            
+            <div id="processed"></div>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+    function processStudents() {
+        var txt = document.getElementById("pasted").value + "\n";
+        var lines = txt.split('\n');
+             
+        var container = document.getElementById("processed");
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+        
+        var table = document.createElement("table");
+        container.appendChild(table);
+        
+        var header = extractStudent(null);
+        appendStudent(header, table);
+        
+        while (lines.length > 0) {
+            var foundNext = false;
+            while (lines.length > 0 && !foundNext) {
+                lines[0] = lines[0].trim();
+
+                if (lines[0].length === 0) {
+                   lines.splice(0, 1); // Remove empty lines before the next student
+                }
+                else {
+                    foundNext = true;
+                }
+            }
+
+            var student = extractStudent(lines);
+            appendStudent(student, table);
+        }
+    }    
+    
+    function extractStudent(lines) {
+        if (lines === null) {
+            var student = new Object();
+            student.lname = "Last Name";
+            student.fname = "First Name";
+            student.id = "ID";
+            student.gender = "Gender";
+            student.grade = "Grade";
+            student.dob = "DOB";
+            return student;
+        }
+        if (lines.length > 5) {
+            var student = new Object();
+
+            var name = lines[0].split(',');
+            console.log(name);
+            student.lname = name[0].trim();
+            student.fname = name[1].trim().split(' ')[0].trim();
+            student.id = lines[1].split('#')[1].trim();
+            student.gender = lines[2].trim();
+            student.grade = lines[3].trim();
+            student.dob = lines[4].trim();
+            
+            lines.splice(0, 5); // Remove the student's lines
+            
+            return student;
+        }
+        else {
+            lines.splice(0, 5);
+            return null;
+        }
+    }
+    
+    function appendStudent(student, table) {
+        if (student === null) {
+            return;
+        }
+        
+        var tr = document.createElement("tr");
+        table.appendChild(tr);
+        
+        appendCell(student.id, tr);
+        appendCell(student.lname, tr);
+        appendCell(student.fname, tr);
+        appendCell(student.gender, tr);
+        appendCell(student.grade, tr);
+        appendCell(student.dob, tr);
+    }
+    
+    function appendCell(text, row) {
+        var td = document.createElement("td");
+        row.appendChild(td);
+        td.textContent = text;
+    }
+    </script>
+</body>
+</html>
