@@ -16,8 +16,8 @@
       </div>
       <div class="wrapper">
         <div class="main">
-            Copy and paste your Infinite Campus Roster of students here:
-            <textarea id="pasted" onChange="processStudents()" onKeyPress="processStudents()"></textarea>
+            Copy and paste your Infinite Campus Roster of students here:<br>
+            <textarea id="pasted" onChange="processStudents()" onkeypress="processStudents()" style="width: 100%;"></textarea>
             
             <div id="processed"></div>
         </div>
@@ -102,9 +102,9 @@
         appendCell(student.id, tr);
         appendCell(student.lname, tr);
         appendCell(student.fname, tr);
+        appendCell(student.dob, tr);
         appendCell(student.gender, tr);
         appendCell(student.grade, tr);
-        appendCell(student.dob, tr);
     }
     
     function appendCell(text, row) {
