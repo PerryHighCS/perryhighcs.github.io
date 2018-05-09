@@ -107,11 +107,16 @@ function total(items) {
             
     return score;
 }
+
+function reset() {
+    $(".checked").removeClass("checked");
+    $(".questionPart").each(score);
+}
         </script>
     </head>
     <body onload="init();">
 <h1>Final FRQ Rubric</h1>
-
+<button onclick="reset();">Reset</button>
     <ul class="questionPart">
         <li><h2>Part A Bus Stops:</h2>
             <ul class="points">
@@ -183,5 +188,6 @@ function total(items) {
             <span class="score"></span>
         </li>
     </ul> 
+<button onclick="reset();">Reset</button>
     </body>
 </html>
