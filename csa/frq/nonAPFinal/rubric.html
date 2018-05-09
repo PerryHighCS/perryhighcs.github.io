@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>CSA Final FRQ Rubric</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            .questionPart {
+                display: block;
+                border: 1px solid black;
+                border-radius: 3px;
+                margin-bottom: 10px;
+                list-style-type: none;
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+            
+            .questionPart li {
+                list-style-type: none;
+                display: block;
+            }
+            
+            .points, .penalties {
+                padding-left: 0px;
+            }
+            
+            .points li,
+            .penalties li {
+                display: block;
+                list-style-type: none;
+                border: 1px solid gray;
+                border-radius: 2px;
+                margin-bottom: 2px;
+                margin-left: 0px;
+                padding: 8px;
+                -moz-user-select: -moz-none;
+                -khtml-user-select: none;
+                -webkit-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+
+            }
+            
+            .points li.checked {
+                background-color: #afa;
+            }
+            
+            
+            .penalties li.checked {
+                background-color: #faa;
+            }
+            
+            .score {
+                font-size: x-large;
+                margin-bottom: 20px;
+                margin-left: 20px;
+                display: block;
+            }
+            
+            
+        </style>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script>
+function init() {
+    $(".points li, .penalties li").click(toggleItem);
+    
+    $(".questionPart").each(score);
+}
+
+function toggleItem(event) {
+    let item = $(event.delegateTarget);
+    
+    item.toggleClass("checked");
+        
+    let question = item.parents(".questionPart");
+    
+    question.each(score);
+}
+
+function score(index, q) {    
+    let question = $(q);
+    let points = question.find(".points li");
+    let penalties = question.find(".penalties li");
+    
+    let score = question.find(".score");
+    
+    score.text(Math.max(total(points) - total(penalties), 0));
+}
+
+function total(items) {
+    let score = 0;
+    
+    items.each((idx, el) => {
+       let item = $(el);
+       let amount = parseInt(item.attr("points")) || 1;
+       
+       if (item.hasClass("checked")) {
+           score += amount;
+       }
+    });
+            
+    return score;
+}
+        </script>
+    </head>
+    <body onload="init();">
+<h1>Final FRQ Rubric</h1>
+
+    <ul class="questionPart">
+        <li><h2>Part A Bus Stops:</h2>
+            <ul class="points">
+                <li>Solution properly extends Location class</li>
+                <li>Solution includes proper class and method headers and variable declarations</li>
+                <li>Solution includes a constructor that calls superclass constructor</li>
+                <li>Solution constructor properly initializes route number and stop name</li>
+                <li>Solution provides proper getters and setters for route number and stop name</li>
+            </ul>
+        </li>
+        <li>
+            <h3>Penalties:</h3>
+            <ul class="penalties">
+                <li>Extraneous code that causes side-effect (e.g., printing to output, incorrect precondition check)</li>
+                <li>Local variables used but none declared</li>
+            </ul>
+        </li>
+        <li>
+            <h3>Score:</h3>
+            <span class="score"></span>
+        </li>
+    </ul>
+
+    <ul class="questionPart">
+        <li><h2>Part B Buses:</h2>
+            <ul class="points">
+                <li>Solution includes proper method header with return type</li>
+                <li>Solution returns proper values after comparing current number of passengers to number of seats</li>
+            </ul>
+        </li>
+        <li>
+            <h3>Penalties:</h3>
+            <ul class="penalties">
+                <li>Extraneous code that causes side-effect (e.g., printing to output, incorrect precondition check)</li>
+                <li>Local variables used but none declared</li>
+            </ul>
+        </li>
+        <li>
+            <h3>Score:</h3>
+            <span class="score"></span>
+        </li>            
+    </ul> 
+
+    <ul class="questionPart">
+        <li><h2>Part C New Students:</h2>
+            <ul class="points">
+                <li>Solution includes proper method header with return type</li>
+                <li>Solution properly searches all buses</li>
+                <li>Solution properly checks if buses are full</li>
+                <li>Solution properly searches all stops in buses that are not full</li>
+                <li>Solution properly checks distance between student's address and each stop</li>
+                <li>Solution properly keeps track of stop at shortest distance</li>
+                <li>Solution returns stop at shortest distance</li>
+                <li>Solution returns null if no available stop exists</li>                    
+            </ul>
+        </li>
+        <li>
+            <h3>Penalties:</h3>
+            <ul class="penalties">
+                <li>Array/collection access confusion ([] get)</li>
+                <li>Extraneous code that causes side-effect (e.g., printing to output, incorrect precondition check)</li>
+                <li>Local variables used but none declared</li>
+                <li>Destruction of persistent data (e.g., changing value referenced by parameter)</li>
+                <li>Void method or constructor that returns a value</li>                    
+            </ul>
+        </li>
+        <li>
+            <h3>Score:</h3>
+            <span class="score"></span>
+        </li>
+    </ul> 
+    </body>
+</html>
