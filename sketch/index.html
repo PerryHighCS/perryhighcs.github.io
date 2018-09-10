@@ -121,9 +121,9 @@
         redraw();
     });
 
-    canvas.mousedown(drawStart);
-    canvas.mouseup(drawEnd);
-    canvas.mousemove(draw);
+    canvas.on("mousedown touchstart", drawStart);
+    canvas.on("mouseup touchend", drawEnd);
+    canvas.on("mousemove touchmove", draw);
     
     redraw();
 })();
