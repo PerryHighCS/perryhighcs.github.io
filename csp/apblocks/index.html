@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>AP Pseudocode</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="ui.css">
+        <link rel="stylesheet" href="blockStyles.css">
+    </head>
+    <body>
+        <div id="pallet" class="APblocks">
+            <inst><valph></valph>&nbsp;&LongLeftArrow;&nbsp;<valph></valph></inst>
+            <val><valph></valph>&nbsp;+&nbsp;<valph></valph></val>
+            <val><valph></valph>&nbsp;-&nbsp;<valph></valph></val>
+            <val><valph></valph>&nbsp;*&nbsp;<valph></valph></val>
+            <val><valph></valph>&nbsp;/&nbsp;<valph></valph></val>
+            <val><valph></valph>&nbsp;MOD&nbsp;<valph></valph></val>
+            <val>RANDOM <list></list></val>
+            <inst>DISPLAY <valph></valph></inst>
+            <val>INPUT</val>
+            <cond><valph></valph>&nbsp;=&nbsp;<valph></valph></cond>
+            <cond><valph></valph>&nbsp;&ne;&nbsp;<valph></valph></cond>
+            <cond><valph></valph>&nbsp;&lt;&nbsp;<valph></valph></cond>
+            <cond><valph></valph>&nbsp;&gt;&nbsp;<valph></valph></cond>
+            <cond><valph></valph>&nbsp;&le;&nbsp;<valph></valph></cond>
+            <cond><valph></valph>&nbsp;&ge;&nbsp;<valph></valph></cond>
+            <cond>NOT&nbsp;<condph></condph></cond>
+            <cond><condph></condph>&nbsp;AND&nbsp;<condph></condph></cond>
+            <cond><condph></condph>&nbsp;OR&nbsp;<condph></condph></cond>
+            
+            <blinst class="dark">IF <condph></condph><br>
+                <bl>
+                </bl>                 
+            </blinst>
+            
+            <blinst class="dark">IF <condph></condph><br>
+                <bl>                    
+                </bl>
+            ELSE
+                <bl></bl>
+            </blinst>
+            
+            <blinst>REPEAT <valph></valph> TIMES<br>
+                <bl></bl>
+            </blinst>
+            
+            <blinst>REPEAT UNTIL <condph></condph><br>
+                <bl>                    
+                </bl>
+            </blinst>
+            
+            <inst>MOVE_FORWARD</inst>
+            <inst>ROTATE_RIGHT</inst>
+            <inst>ROTATE_LEFT</inst>
+            <cond>CAN_MOVE <valph></valph></cond>
+            
+            <blinst>PROCEDURE <valph>name</valph> <list></list><br>
+                <bl>                    
+                </bl>                
+            </blinst>
+            
+            <inst>RETURN <valph></valph></inst>
+        </div>
+        
+        <div id="program">
+            
+        </div>
+        
+    </body>
+</html>

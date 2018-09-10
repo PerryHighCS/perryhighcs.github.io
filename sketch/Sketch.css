@@ -1,0 +1,19 @@
+.imagedata {
+    width: 100%;
+    min-height: 400px;
+    resize: none;
+}
+
+.column {
+    float: left;
+    width: 50%;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}

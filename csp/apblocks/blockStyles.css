@@ -1,0 +1,93 @@
+.APblocks {
+  font-family: monospace;
+}
+
+cond, condph{
+  border: solid 1px black;
+  border-radius: 30px;
+  padding: 1px 10px 1px 10px;
+  width: fit-content;
+  min-width: 1em;
+  min-height: 1em;
+  margin: 2px;
+  vertical-align: middle;
+}
+
+cond {    
+  display: block;
+}
+condph {
+    display: inline-block;
+}
+
+val, valph{
+  border: solid 1px black;
+  border-radius: 0px;
+  margin: 1px;
+  padding: 2px 3px 2px 3px;
+  min-width: 1em;
+  min-height: 1em;
+  vertical-align: middle;
+  width: max-content;
+}
+
+valph {    
+  display: inline-block;
+}
+
+val {
+    display: block;
+}
+
+blinst {
+  border: solid 1px black;
+  border-radius: 5px;
+  font-family: monospace;
+  padding: 5px 5px 2px 5px;
+  display: block;
+  width: max-content;
+  margin-top: 1px;
+  background-color: #dddddd;
+}
+
+bl {
+  border: solid 1px black;
+  border-radius: 5px;
+  font-family: monospace;
+  padding: 2px 5px 2px 5px;
+  background-color: white;
+  display: inline-block;
+  margin-top: 1px;
+}
+
+blinst > bl, bl > bl {
+    min-height: 1em;
+    margin: 5px 2px  3px 10px;
+    display: block;
+}
+
+inst {
+  border: solid 1px black;
+  border-radius: 5px;
+  font-family: monospace;
+  padding: 2px 5px 2px 5px;
+  background-color: white;
+  display: block;
+  width: fit-content;
+  margin-top: 1px;
+}
+
+
+list {
+  border: solid 1px black;
+  border-radius: 0px;
+  margin: 1px;
+  padding: 2px 3px 2px 3px;
+  display: inline-block;
+  min-width: 1em;
+  min-height: 1em;
+  vertical-align: middle;
+}
+
+.dark{
+}
