@@ -27,6 +27,8 @@
     const canvas = container.find('.imagedisplay');
     
     let lines = [];
+    let touches = [];
+    let currentLine = [];
     
     const redraw = function() {
         let width = canvas.parent().width();
@@ -60,40 +62,75 @@
         }
                 
     };
-    
-    const drawStart = function(event) {
-        let point = normalize(eventLocation(event));
         
-        lines.push([point]);
-        console.log("start", point);
+    const drawStart = function(point) {
+        currentLine = [point];
         
+        lines.push(currentLine);
         redraw();
     };
     
-    const drawEnd = function(event) {
-        let point = normalize(eventLocation(event));
-        
-        console.log("end", point);
-        
-        if (lines.length > 0) {
-            lines[lines.length - 1].push(point);
-            console.log(lines[lines.length - 1]);
-        }
-        
+    const drawEnd = function(point) {
+        currentLine.push(point);
         redraw();
     };
     
-    const draw = function(event) {
+    const draw = function(point) {
+        currentLine.push(point);
+        redraw();
+    };
+    
+    
+    const mouseStart = function(event) {
+        event.preventDefault();
+        let point = normalize(eventLocation(event));        
+        drawStart(point);
+    };
+    
+    const mouseEnd = function(event) {
+        event.preventDefault();
+        let point = normalize(eventLocation(event));        
+        drawEnd(point);
+    };
+    
+    const mouseMove = function(event) {
         if (event.which === 1) {
-            let point = normalize(eventLocation(event));
-            if (lines.length > 0) {
-                lines[lines.length - 1].push(point);
-            }
-            else {
-                lines.push([point]);
-            }
-            redraw();
+            event.preventDefault();
+            let point = normalize(eventLocation(event));            
+            draw(point);
         }
+    };
+    
+    const touchStart = function(event) {
+        event.changedTouches.forEach((touch) => {
+            let points = [normalize(eventLocation(touch))];
+            lines.push(points);
+            touches.push({"id": touch.identifier, "points": points}); 
+        });
+        redraw();
+    };
+    
+    const touchEnd = function(event) {            
+        event.changedTouches.forEach((touch) => {
+            for (let i = touches.length - 1; i >= 0; i--) {
+                if (touches[i].identifier === touch.identifier) {
+                    touches[i].points.push(normalize(eventLocation(touch)));
+                    touches.splice(i, 1);
+                }
+            }
+        });        
+        redraw();
+    };
+    
+    const touchMove = function(event) {
+        event.changedTouches.forEach((touch) => {
+            for (let i = touches.length - 1; i >= 0; i--) {
+                if (touches[i].identifier === touch.identifier) {
+                    touches[i].points.push(normalize(eventLocation(touch)));
+                }
+            }
+        });        
+        redraw();
     };
     
     function eventLocation(e) {
@@ -110,6 +147,8 @@
         return [offsetX, offsetY];
     }
     
+    
+    
     function normalize(point) {
         let width = canvas.width();
         let height = canvas.height();
@@ -121,9 +160,12 @@
         redraw();
     });
 
-    canvas.on("mousedown touchstart", drawStart);
-    canvas.on("mouseup touchend", drawEnd);
-    canvas.on("mousemove touchmove", draw);
+    canvas.on("mousedown", mouseStart);
+    canvas.on("mouseup", mouseEnd);
+    canvas.on("mousemove", mouseMove);
+    canvas.on("touchstart", touchStart);
+    canvas.on("touchend", touchEnd);
+    canvas.on("touchmove", touchMove);
     
     redraw();
 })();
