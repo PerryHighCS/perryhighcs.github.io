@@ -102,34 +102,52 @@
     };
     
     const touchStart = function(event) {
-        event.changedTouches.forEach((touch) => {
+        event.preventDefault();
+        
+        for (let i = 0; i < event.changedTouches.length; i++) {
+            let touch = event.changedTouches[i];
             let points = [normalize(eventLocation(touch))];
             lines.push(points);
             touches.push({"id": touch.identifier, "points": points}); 
-        });
+        }
         redraw();
     };
     
-    const touchEnd = function(event) {            
-        event.changedTouches.forEach((touch) => {
+    const touchEnd = function(event) { 
+        event.preventDefault();
+        
+        for (let j = 0; j < event.changedTouches.length; j++) {
+            let touch = event.changedTouches[j];
+            
             for (let i = touches.length - 1; i >= 0; i--) {
-                if (touches[i].identifier === touch.identifier) {
+                if (touches[i].id === touch.identifier) {
+                    let point = normalize(eventLocation(touch));
+                    
                     touches[i].points.push(normalize(eventLocation(touch)));
                     touches.splice(i, 1);
                 }
             }
-        });        
+        }
+        
         redraw();
     };
     
     const touchMove = function(event) {
-        event.changedTouches.forEach((touch) => {
+        event.preventDefault();
+        
+        for (let j = 0; j < event.changedTouches.length; j++) {
+            let touch = event.changedTouches[j];
+                        
             for (let i = touches.length - 1; i >= 0; i--) {
-                if (touches[i].identifier === touch.identifier) {
-                    touches[i].points.push(normalize(eventLocation(touch)));
+                if (touches[i].id === touch.identifier) {
+                    let point = normalize(eventLocation(touch));
+                    
+                    touches[i].points.push(point);
                 }
             }
-        });        
+        }
+        
+//        console.log(touches);
         redraw();
     };
     
@@ -146,8 +164,6 @@
 
         return [offsetX, offsetY];
     }
-    
-    
     
     function normalize(point) {
         let width = canvas.width();
