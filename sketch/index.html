@@ -15,6 +15,11 @@
     </head>
     <body style="background-color: lightsalmon;">
         <div class="container">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary draw"><span class="glyphicon glyphicon-pencil"></span>&nbsp;Draw</button>
+                <button type="button" class="btn btn-secondary erase"><span class="glyphicon glyphicon-erase"></span>&nbsp;Erase</button>
+            </div>
+            <button type="button" class="btn btn-secondary clear"><span class="glyphicon glyphicon-trash"></span>&nbsp;Clear Drawing</button>
             <div class="row">
                 <canvas class="imagedisplay"></canvas>
             </div>
@@ -26,9 +31,45 @@
     
     const canvas = container.find('.imagedisplay');
     
+    const drawButton = container.find('.draw');
+    const eraseButton = container.find('.erase');
+    const clearButton = container.find('.clear');
+    
     let lines = [];
     let touches = [];
     let currentLine = [];
+    let eraserPt = null;
+    let eraserSize = 10;
+    
+    let mode = "draw";
+    
+    const drawMode = function() {
+        drawButton.addClass('btn-primary');
+        drawButton.removeClass('btn-secondary');
+        
+        eraseButton.addClass('btn-secondary');
+        eraseButton.removeClass('btn-primary');
+        
+        eraserPt = null;
+        
+        mode = "draw";
+        
+        redraw();
+    };
+    
+    const eraseMode = function() {
+        drawButton.addClass('btn-secondary');
+        drawButton.removeClass('btn-primary');
+        
+        eraseButton.addClass('btn-primary');
+        eraseButton.removeClass('btn-secondary');
+        
+        eraserPt = null;
+        
+        mode = "erase";
+        
+        redraw();
+    };
     
     const redraw = function() {
         let width = canvas.parent().width();
@@ -60,97 +101,177 @@
                 }
             });
         }
+        
+        if (mode === "erase" && eraserPt) {
+            ctx.beginPath();
+            ctx.arc(size * eraserPt[0], size * eraserPt[1], eraserSize, 0, Math.PI * 2);
+            ctx.stroke();            
+        }
                 
     };
+    
+    
+    const erase = function(point) {
         
-    const drawStart = function(point) {
-        currentLine = [point];
+    }
+    
+    function inteceptCircleLineSeg(circle, line){
+        var a, b, c, d, u1, u2, ret, retP1, retP2, v1, v2;
         
-        lines.push(currentLine);
-        redraw();
-    };
-    
-    const drawEnd = function(point) {
-        currentLine.push(point);
-        redraw();
-    };
-    
-    const draw = function(point) {
-        currentLine.push(point);
-        redraw();
-    };
-    
+        v1 = {};
+        v2 = {};
+        v1.x = line.p2.x - line.p1.x;
+        v1.y = line.p2.y - line.p1.y;
+        v2.x = line.p1.x - circle.center.x;
+        v2.y = line.p1.y - circle.center.y;
+        
+        b = (v1.x * v2.x + v1.y * v2.y);
+        c = 2 * (v1.x * v1.x + v1.y * v1.y);
+        b *= -2;
+        
+        d = Math.sqrt(b * b - 2 * c * (v2.x * v2.x + v2.y * v2.y - circle.radius * circle.radius));
+        
+        if(isNaN(d)){ // no intercept
+            return [];
+        }
+        
+        u1 = (b - d) / c;  // these represent the unit distance of point one and two on the line
+        u2 = (b + d) / c;    
+        retP1 = {};   // return points
+        retP2 = {};  
+        ret = []; // return array
+        if(u1 <= 1 && u1 >= 0){  // add point if on the line segment
+            retP1.x = line.p1.x + v1.x * u1;
+            retP1.y = line.p1.y + v1.y * u1;
+            ret[0] = retP1;
+        }
+        if(u2 <= 1 && u2 >= 0){  // second add point if on the line segment
+            retP2.x = line.p1.x + v1.x * u2;
+            retP2.y = line.p1.y + v1.y * u2;
+            ret[ret.length] = retP2;
+        }       
+        return ret;
+    }
     
     const mouseStart = function(event) {
         event.preventDefault();
-        let point = normalize(eventLocation(event));        
-        drawStart(point);
+        
+        if (mode === "draw" && event.which === 1) {
+            let point = normalize(eventLocation(event));        
+            currentLine = [point];
+
+            lines.push(currentLine);
+        }
+        else if (mode === "erase") {
+            eraserPt = normalize(eventLocation(event));
+            
+            if (event.which === 1) {
+                erase(eraserPt);
+            }
+        }
+        
+        redraw();
     };
     
     const mouseEnd = function(event) {
         event.preventDefault();
-        let point = normalize(eventLocation(event));        
-        drawEnd(point);
+        if (mode === "draw" && event.which === 1) {
+            let point = normalize(eventLocation(event));        
+            currentLine.push(point);
+        }
+        else if (mode === "erase") {
+            eraserPt = normalize(eventLocation(event));
+            
+            if (event.which === 1) {
+                erase(eraserPt);
+            }
+        }
+        
+        redraw();
     };
     
     const mouseMove = function(event) {
-        if (event.which === 1) {
+        if (mode === "draw" && event.which === 1) {
             event.preventDefault();
             let point = normalize(eventLocation(event));            
-            draw(point);
+            currentLine.push(point);
+            redraw();
         }
+        else if (mode === "erase") {
+            event.preventDefault();
+            eraserPt = normalize(eventLocation(event));
+            
+            if (event.which === 1) {
+                erase(eraserPt);
+            }            
+        }
+        
+        redraw();
     };
     
     const touchStart = function(event) {
         event.preventDefault();
         
-        for (let i = 0; i < event.changedTouches.length; i++) {
-            let touch = event.changedTouches[i];
-            let points = [normalize(eventLocation(touch))];
-            lines.push(points);
-            touches.push({"id": touch.identifier, "points": points}); 
+        if (mode === "draw") {
+            // Start a line for each new touch
+            for (let i = 0; i < event.changedTouches.length; i++) {
+                let touch = event.changedTouches[i];
+                let points = [normalize(eventLocation(touch))];
+                lines.push(points);
+                touches.push({"id": touch.identifier, "points": points}); 
+            }
         }
+        
         redraw();
     };
     
     const touchEnd = function(event) { 
         event.preventDefault();
         
-        for (let j = 0; j < event.changedTouches.length; j++) {
-            let touch = event.changedTouches[j];
-            
-            for (let i = touches.length - 1; i >= 0; i--) {
-                if (touches[i].id === touch.identifier) {
-                    let point = normalize(eventLocation(touch));
-                    
-                    touches[i].points.push(normalize(eventLocation(touch)));
-                    touches.splice(i, 1);
+        if (mode === "draw") {
+            // Finish the line for each already running touch
+            for (let j = 0; j < event.changedTouches.length; j++) {
+                let touch = event.changedTouches[j];
+
+                for (let i = touches.length - 1; i >= 0; i--) {
+                    if (touches[i].id === touch.identifier) {                    
+                        touches[i].points.push(normalize(eventLocation(touch)));
+                        touches.splice(i, 1);
+                    }
                 }
             }
         }
-        
         redraw();
     };
     
     const touchMove = function(event) {
         event.preventDefault();
         
-        for (let j = 0; j < event.changedTouches.length; j++) {
-            let touch = event.changedTouches[j];
-                        
-            for (let i = touches.length - 1; i >= 0; i--) {
-                if (touches[i].id === touch.identifier) {
-                    let point = normalize(eventLocation(touch));
-                    
-                    touches[i].points.push(point);
+        if (mode === "draw") {
+            // Add new points to the lines for each touch
+            for (let j = 0; j < event.changedTouches.length; j++) {
+                let touch = event.changedTouches[j];
+
+                for (let i = touches.length - 1; i >= 0; i--) {
+                    if (touches[i].id === touch.identifier) {
+                        let point = normalize(eventLocation(touch));
+
+                        touches[i].points.push(point);
+                    }
                 }
             }
         }
         
-//        console.log(touches);
         redraw();
     };
     
+    /**
+     * Get the x and y coordinates of a touch event
+     * 
+     * @param {Event} e 
+     * @returns {Array} containing the X and Y coordinates of the event in the 
+     *                  client element
+     */
     function eventLocation(e) {
         e = e || window.event;
 
@@ -165,6 +286,13 @@
         return [offsetX, offsetY];
     }
     
+    /**
+     * Scale a point to be within the range of a canvass width and height
+     * 
+     * @param {Array} point
+     * @returns {Array} the same point scaled to percentage of the canvas's
+     *                  width and height
+     */
     function normalize(point) {
         let width = canvas.width();
         let height = canvas.height();
@@ -183,6 +311,9 @@
     canvas.on("touchend", touchEnd);
     canvas.on("touchmove", touchMove);
     
+    drawButton.click(drawMode);
+    eraseButton.click(eraseMode);
+    clearButton.click(() => {lines = []; touches = []; redraw();});
     redraw();
 })();
 
