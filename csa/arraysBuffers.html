@@ -76,7 +76,7 @@
             }
             
             div.startPos:before {                
-                content: "Start ->";
+                content: "Start \2192";
             }
             
             div.endPos {
@@ -89,7 +89,7 @@
             }
             
             div.endPos:before {                
-                content: "End ->";
+                content: "End \2192";
             }
             
             .pointerRow td {
@@ -98,7 +98,7 @@
             }
         </style>
     </head>
-    <body onload="start(); //doGears(document.body);">
+    <body>
         <div class="page">
             <div class="title">
                 Perryma<span class="tiny"><i class="fa fa-cog fa-spin"></i></span>tk: Computer Science For Perry High School
@@ -161,7 +161,14 @@
                         character from the beginning as it is handled.
                     </p>
                     <div class='example'>
-                    Buffer:&nbsp;<div id='inputExample'></div>
+                        Buffer:&nbsp;<div id='inputExample'></div>
+                        <div class="democtrls">
+                            <button type="button" class="btn play" style="display: none;"><i class="fa fa-play" aria-hidden="true"></i>Continue</button>
+                            <button type="button" class="btn pause"><i class="fa fa-pause" aria-hidden="true">Pause</i></button>
+                            <button type="button" class="btn add" style="display: none;"><i class="fa fa-keyboard-o" aria-hidden="true">Add Character</i></button>
+                            <button type="button" class="btn process" style="display: none;"><i class="fa fa-mail-reply-all" aria-hidden="true">Process Character</i></button>
+                            <button type="button" class="btn restart"><i class="fa fa-refresh" aria-hidden="true">Restart</i></button>
+                        </div>
                     </div>
                     <p>
                         When the buffer is using an array, it would be pointless
@@ -172,17 +179,30 @@
                         array copying elements. That could require thousands of
                         operations and you don't want to waste that time.
                     </p>
-                    <div class='example'>
-                        Buffer:&nbsp;
-                        <div class='tableContainer'>
-                            <table id='inputArray' class='bufferTable'>
-                                <thead>
+                    <div class='example' id='inputArray'>
+                        <div class='overflow' style='display: none;'>
+                            <h1>BUFFER OVERFLOW!!</h1>
+                        </div>
+                        
+                        <div class='buffer'>
+                            Buffer:&nbsp;
+                            <div class='tableContainer'>
+                                <table class='bufferTable'>
+                                    <thead>
 
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="democtrls">
+                            <button type="button" class="btn play" style="display: none;"><i class="fa fa-play" aria-hidden="true"></i>Continue</button>
+                            <button type="button" class="btn pause"><i class="fa fa-pause" aria-hidden="true">Pause</i></button>
+                            <button type="button" class="btn add" style="display: none;"><i class="fa fa-keyboard-o" aria-hidden="true">Add Character</i></button>
+                            <button type="button" class="btn process" style="display: none;"><i class="fa fa-mail-reply-all" aria-hidden="true">Process Character</i></button>
+                            <button type="button" class="btn restart"><i class="fa fa-refresh" aria-hidden="true">Restart</i></button>
                         </div>
                     </div>
                     <p> We will normally just keep track of the next element in
@@ -199,17 +219,29 @@
                         before the first element. You just wrap around when you
                         reach the end of the array.
                     </p>
-                    <div class='example'>
-                        Buffer:&nbsp;
-                        <div class='tableContainer'>
-                            <table id='inputBuffer' class='bufferTable'>
-                                <thead>
+                    <div class='example' id='inputBuffer'>
+                        <div class='overflow' style='display: none;'>
+                            <h1>BUFFER OVERFLOW!!</h1>
+                        </div>
+                        <div class='buffer'>
+                            Buffer:&nbsp;
+                            <div class='tableContainer'>
+                                <table class='bufferTable'>
+                                    <thead>
 
-                                </thead>
-                                <tbody>
+                                    </thead>
+                                    <tbody>
 
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="democtrls">
+                            <button type="button" class="btn play" style="display: none;"><i class="fa fa-play" aria-hidden="true"></i>Continue</button>
+                            <button type="button" class="btn pause"><i class="fa fa-pause" aria-hidden="true">Pause</i></button>
+                            <button type="button" class="btn add" style="display: none;"><i class="fa fa-keyboard-o" aria-hidden="true">Add Character</i></button>
+                            <button type="button" class="btn process" style="display: none;"><i class="fa fa-mail-reply-all" aria-hidden="true">Process Character</i></button>
+                            <button type="button" class="btn restart"><i class="fa fa-refresh" aria-hidden="true">Restart</i></button>
                         </div>
                     </div>
                     <p>
@@ -241,232 +273,352 @@
                                 </tbody>
                             </table>
                         </div>
+                        <div class="democtrls">
+                            <button type="button" class="btn play" style="display: none;"><i class="fa fa-play" aria-hidden="true"></i>Continue</button>
+                            <button type="button" class="btn pause"><i class="fa fa-pause" aria-hidden="true">Pause</i></button>
+                            <button type="button" class="btn add" style="display: none;"><i class="fa fa-keyboard-o" aria-hidden="true">Add Character</i></button>
+                            <button type="button" class="btn process" style="display: none;"><i class="fa fa-mail-reply-all" aria-hidden="true">Process Character</i></button>
+                            <button type="button" class="btn restart"><i class="fa fa-refresh" aria-hidden="true">Restart</i></button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>    
-        <script>
-            var input = "I am a very smrt user.";
+        <script type="module">
+var playing = true;
 
-            function start() {
-                let inFrame = (self!==top);
+var addFuncs = [];
+var processFuncs = [];
 
-                if (inFrame) {
-                    $('.menubar').hide();
-                }
+function start() {
+    $('.btn.play').click(play);
+    $('.btn.pause').click(pause);
+    $('.btn.add').click(add);
+    $('.btn.process').click(process);
+    $('.btn.restart').click(restart);
+    
+    init();
+    
+    let producerInterval = setInterval(()=>{
+        if (playing) {
+            produceText();
+        }
+    }, 200);
+    
+    let consumerInterval = setInterval(()=>{
+        if (playing) {
+            consumeText();
+        }
+    }, 1000);
+}
 
-                setupInputExample();
-                setupArrayExample();
-                setupBufferExample();
-            }
-            function setupInputExample() {
-                let start = 0;
-                
-                let container = $('#inputExample');
-                
-                setInterval(function() {
-                    let text = container.text();
-                    if (text.length > 0) {
-                        container.text(text.substring(1));
-                    }
-                }, 1000);
-                
-                setInterval(function() {
-                    let text = container.text();
+function init() {
+    addFuncs = [];
+    processFuncs = [];
+    
+    let input = "I am a very fast typer.";
+    let inFrame = (self!==top);
 
-                    if (text.length === 0) {
-                        start = 0;
-                    }
-                    
-                    if (start < input.length) {
-                        text += input.charAt(start);
-                        start++;
-                    }                    
-                    container.text(text);
-                    
-                }, 200);
+    if (inFrame) {
+        $('.menubar').hide();
+    }
+
+    setupInputExample(input, $('#inputExample'));
+    setupArrayExample(input, $('#inputArray'));
+    setupBufferExample(input, $('#inputBuffer'));
+}
+
+function produceText() {
+    addFuncs.forEach(func => func());
+}
+
+
+function consumeText() {
+    processFuncs.forEach(func => func());
+}
+
+function play() {
+    playing = true;
+    $('.btn.play').hide();
+    $('.btn.pause').show();
+    $('.btn.add').hide();
+    $('.btn.process').hide();
+    $('.btn.restart').prop('disabled', false);
+}
+
+function pause() {
+    playing = false;
+    $('.btn.play').show();
+    $('.btn.pause').hide();
+    $('.btn.add').show();
+    $('.btn.process').show();
+    $('.btn.restart').prop('disabled', false);
+}
+
+function add() {
+    $('.btn.restart').prop('disabled', false);
+     produceText();
+}
+
+function process() {
+    $('.btn.restart').prop('disabled', false);
+    consumeText();
+}
+    
+function restart() {
+    playing = false;
+    init();
+    $('.btn.play').show();
+    $('.btn.pause').hide();
+    $('.btn.add').show();
+    $('.btn.process').show();  
+    $('.btn.restart').prop('disabled', true); 
+}
+
+async function setupInputExample(input, container) {
+    let start = 0;
+    container.empty();
+    
+    processFuncs.push(()=>{
+        let text = container.text();
+        if (text.length > 0) {
+            container.text(text.substring(1));
+        }
+    });
+    
+    addFuncs.push(()=>{
+        let text = container.text();
+
+        if (text.length === 0) {
+            start = 0;
+        }
+
+        if (start < input.length) {
+            text += input.charAt(start);
+            start++;
+        }                    
+        container.text(text);
+    });
+}
+
+async function setupArrayExample(input, container) {
+    container.find('.overflow').hide();
+    container.find('.buffer').show();
+    
+    let start = 0;
+    let len = 0;
+    let text = "";
+    let bufferCells = [];
+    let overflow = false;
+    
+    let head = container.find('thead');
+    let body = container.find('tbody');
+
+    head.empty();
+    body.empty();
+    
+    let headRow = $('<tr>');
+    head.append(headRow);
+    let bodyRow = $('<tr>');
+    body.append(bodyRow);
+
+    // Create buffer table
+    for (let i = 0; i < input.length - 2; i++) {
+        let cell = $('<th>');
+        if (i === 0) {
+            cell.text('index:');
+        }
+        else {
+            cell.text(i - 1);
+        }
+        headRow.append(cell);
+
+        cell = $('<td>');
+        bodyRow.append(cell);
+        cell.html('&nbsp;');
+
+        if (i > 0) {
+            bufferCells.push(cell);
+        }
+        else {
+            cell.addClass('lenCell');
+        }
+    }
+
+    processFuncs.push(()=>{
+        if (overflow) {
+            return;
+        }
+        
+        if (len > 0) {
+            text = text.substring(1);
+            len--;
+        }
+        updateBuffer();
+    });
+    
+    addFuncs.push(()=>{
+        if (overflow) {
+            return;
+        }
+        
+        if (len === bufferCells.length) {
+            overflow = true;
+            container.find('.overflow').show();
+            container.find('.buffer').hide();
+        }
+        else if (start < input.length) {
+            text += input.charAt(start);                        
+            len++;
+            start++;
+        }                    
+        else if (len === 0) {                        
+            start = 0;
+        }
+        updateBuffer();
+    });
+
+    function updateBuffer() {
+        for (let i = 0; i < bufferCells.length; i++) {
+            if (i < len) {
+                bufferCells[i].text(text.charAt(i));
             }
-                        
-            function setupArrayExample() {
-                let start = 0;
-                let len = 0;
-                let text = "";
-                let bufferCells = [];
-                
-                let head = $('#inputArray thead');
-                let body = $('#inputArray tbody');
-                
-                let headRow = $('<tr>');
-                head.append(headRow);
-                let bodyRow = $('<tr>');
-                body.append(bodyRow);
-                
-                // Create buffer table
-                for (let i = 0; i < input.length - 3; i++) {
-                    let cell = $('<th>');
-                    if (i === 0) {
-                        cell.text('index:');
-                    }
-                    else {
-                        cell.text(i - 1);
-                    }
-                    headRow.append(cell);
-                    
-                    cell = $('<td>');
-                    bodyRow.append(cell);
-                    cell.html('&nbsp;');
-                    
-                    if (i > 0) {
-                        bufferCells.push(cell);
-                    }
-                    else {
-                        cell.addClass('lenCell');
-                    }
-                }
-                
-                // Setup consumer
-                setInterval(function() {
-                    if (len > 0) {
-                        text = text.substring(1);
-                        len--;
-                    }
-                    updateBuffer(); 
-                }, 1000);
-                
-                // Setup producer
-                setInterval(function() {
-                    if (start < input.length) {
-                        text += input.charAt(start);                        
-                        len++;
-                        start++;
-                    }                    
-                    else if (len === 0) {                        
-                        start = 0;
-                    }
-                    updateBuffer();             
-                }, 300);
-                
-                function updateBuffer() {
-                    for (let i = 0; i < bufferCells.length; i++) {
-                        if (i < len) {
-                            bufferCells[i].text(text.charAt(i));
-                        }
-                        else {
-                            bufferCells[i].html('&nbsp;');
-                        }
-                    }    
-                    
-                    $('#inputArray .lenCell').html("Length:<br>" + len);
-                }
+            else {
+                bufferCells[i].html('&nbsp;');
             }
-            
-            function setupBufferExample() {
-                let pos = 0;
-                
-                let buffer = [];
-                let start = 0;
-                let len = 0;
-                
-                let bufferCells = [];
-                let pointerCells = [];
-                
-                let head = $('#inputBuffer thead');
-                let body = $('#inputBuffer tbody');
-                                
-                let headRow = $('<tr>');
-                head.append(headRow);
-                let bodyRow = $('<tr>');
-                body.append(bodyRow);
-                let pointerRow = $('<tr class="pointerRow">');
-                body.append(pointerRow);
-                
-                // Create buffer table
-                for (let i = 0; i < input.length - 3; i++) {
-                    let cell = $('<th>');
-                    if (i === 0) {
-                        cell.text('index:');
-                    }
-                    else {
-                        cell.text(i - 1);
-                    }
-                    headRow.append(cell);
-                    
-                    cell = $('<td>');
-                    bodyRow.append(cell);
-                    cell.html('&nbsp;');
-                    
-                    if (i > 0) {
-                        bufferCells.push(cell);
-                        buffer.push("");
-                    }
-                    else {
-                        cell.addClass('filledCell');
-                    }
-                    
-                    cell = $('<td>');
-                    pointerRow.append(cell);
-                    cell.html('&nbsp;');
-                                        
-                    if (i > 0) {
-                        let div = $('<div class="pointerCell">');
-                        pointerCells.push(div);
-                        cell.append(div);
-                    }
-                    else {
-                        cell.addClass('lenCell');
-                    }
-                }
-                
-                // Setup consumer
-                setInterval(function() {
-                    if (len > 0) {
-                        start = (start + 1) % buffer.length;
-                        len--;
-                    }                    
-                    updateBuffer(); 
-                }, 1000);
-                
-                // Setup producer
-                setInterval(function() {
-                    if (pos < input.length) {                        
-                        let c = input.charAt(pos);
-                        let end = (start + len) % buffer.length;
-                        buffer[end] = c;
-                        
-                        len++;
-                        pos++;
-                    }                    
-                    else if (len === 0) {                        
-                        pos = 0;                       
-                    }
-                    updateBuffer();
-                }, 300);
-                
-                function updateBuffer() {
-                    for (let i = 0; i < buffer.length; i++) {
-                        bufferCells[i].html('&nbsp;');
-                        pointerCells[i].removeClass('startPos');
-                        pointerCells[i].removeClass('endPos');
-                    }
-                    
-                    for (let i = start; i < start + len; i++) {
-                        let pos = i % buffer.length;
-                        bufferCells[pos].html(buffer[pos]);
-                    }
-                    
-                    pointerCells[start].addClass('startPos');
-                    pointerCells[(start+len)%buffer.length].addClass('endPos');
-                    
-                    $('#inputBuffer .lenCell').html("Length:<br>" + len);
-                    
-                    $('#startVal').text(start);
-                    $('#lenVal').text(len);
-                    
-                    $('#startLen').text(start + len);
-                    $('#startLenMod').text((start+len)%buffer.length);
-                }
-            }
-            
+        }    
+
+        $('#inputArray .lenCell').html("Length:<br>" + len);
+    }
+}
+
+async function setupBufferExample(input, container) {
+    
+    container.find('.overflow').hide();
+    container.find('.buffer').show();
+    
+    let pos = 0;
+
+    let buffer = [];
+    let start = 0;
+    let len = 0;
+    let overflow = false;
+
+    let bufferCells = [];
+    let pointerCells = [];
+
+    let head = container.find('thead');
+    let body = container.find('tbody');
+
+    head.empty();
+    body.empty();
+    
+    let headRow = $('<tr>');
+    head.append(headRow);
+    let bodyRow = $('<tr>');
+    body.append(bodyRow);
+    let pointerRow = $('<tr class="pointerRow">');
+    body.append(pointerRow);
+
+    // Create buffer table
+    for (let i = 0; i < input.length - 2; i++) {
+        let cell = $('<th>');
+        if (i === 0) {
+            cell.text('index:');
+        }
+        else {
+            cell.text(i - 1);
+        }
+        headRow.append(cell);
+
+        cell = $('<td>');
+        bodyRow.append(cell);
+        cell.html('&nbsp;');
+
+        if (i > 0) {
+            bufferCells.push(cell);
+            buffer.push("");
+        }
+        else {
+            cell.addClass('filledCell');
+        }
+
+        cell = $('<td>');
+        pointerRow.append(cell);
+        cell.html('&nbsp;');
+
+        if (i > 0) {
+            let div = $('<div class="pointerCell">');
+            pointerCells.push(div);
+            cell.append(div);
+        }
+        else {
+            cell.addClass('lenCell');
+        }
+    }
+
+    processFuncs.push(()=>{
+        if (overflow) {
+            return;
+        }
+        
+        if (len > 0) {
+            start = (start + 1) % buffer.length;
+            len--;
+        }                    
+        updateBuffer();         
+    });
+    
+    addFuncs.push(()=>{
+        if (overflow) {
+            return;
+        }
+        
+        if (len === buffer.length) {
+            container.find('.overflow').show();
+            container.find('.buffer').hide();
+            overflow = true;
+        }
+        else if (pos < input.length) {                        
+            let c = input.charAt(pos);
+            let end = (start + len) % buffer.length;
+            buffer[end] = c;
+
+            len++;
+            pos++;
+        }                    
+        else if (len === 0) {                        
+            pos = 0;                       
+        }
+        updateBuffer();
+    });
+
+    function updateBuffer() {
+        for (let i = 0; i < buffer.length; i++) {
+            bufferCells[i].html('&nbsp;');
+            pointerCells[i].removeClass('startPos');
+            pointerCells[i].removeClass('endPos');
+        }
+
+        for (let i = start; i < start + len; i++) {
+            let pos = i % buffer.length;
+            bufferCells[pos].html(buffer[pos]);
+        }
+
+        pointerCells[start].addClass('startPos');
+        pointerCells[(start+len)%buffer.length].addClass('endPos');
+
+        $('#inputBuffer .lenCell').html("Length:<br>" + len);
+
+        $('#startVal').text(start);
+        $('#lenVal').text(len);
+
+        $('#startLen').text(start + len);
+        $('#startLenMod').text((start+len)%buffer.length);
+    }
+}
+
+start();
         </script>
     </body>
 </html>
