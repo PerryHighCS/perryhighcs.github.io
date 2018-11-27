@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import colorchooser
 
 # Define the event handler
-def ask_color(): # the event parameter is required
+def ask_color():
     rgb_color, web_color = colorchooser.askcolor(parent=win,
                                              initialcolor=(win['background']))
     win['background']=web_color
