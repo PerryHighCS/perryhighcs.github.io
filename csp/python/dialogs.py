@@ -1,6 +1,8 @@
 import tkinter as tk
 import tkMessageBox as messagebox
 import tkSimpleDialog as simpledialog
+import tkFileDialog as filedialog
+import os
 
 def ask_color():
     ''' Show the color picker '''
@@ -50,6 +52,27 @@ def show_questions():
             elif answer is not None:
                 messagebox.showinfo("After " + str(age) + " years, " + name + " still does not know what 1/2 is.")
 
+def show_files():
+    ''' Demonstrate some file dialogs '''
+    filetypes = [('all files', '.*'), ('text files', '.txt')]
+    # Ask the user to select a folder.
+    folder = filedialog.askdirectory(parent=win,
+                                 initialdir=os.getcwd(),
+                                 title="Please select a folder:")
+                                     
+    if folder is not "":
+        # Ask the user to select a file to open
+        filename = filedialog.askopenfilename(parent=win,
+                                        initialdir=folder,
+                                        title="Please select a file:",
+                                        filetypes=filetypes)
+                                    
+        if filename is not "":
+            filename2 = filedialog.asksaveasfilename(parent=win,
+                                        initialdir=os.getcwd(),
+                                        title="Please select a file name for saving:",
+                                        filetypes=filetypes)
+    
 # Create the main window        
 win = tk.Tk()
 win.title('Dialogs')
@@ -64,8 +87,11 @@ ynBtn.grid(row=2, column=1)
 qBtn = tk.Button(win, text="More Questions", command=show_questions)
 qBtn.grid(row=3, column=1)
 
-colorBtn = tk.Button(win, text="ColorChooser", command=ask_color)
-colorBtn.grid(row=4, column=1)
+fcBtn = tk.Button(win, text="File Chooser", command=show_files)
+fcBtn.grid(row=1, column=2)
+
+colorBtn = tk.Button(win, text="Color Chooser", command=ask_color)
+colorBtn.grid(row=3, column=2)
 
 # Start the event loop
 win.mainloop()
