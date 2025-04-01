@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sort Demo</title>
+    <style>
+        .btn {
+            background-color: #04AA6D; /* Green */
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+        .sortContainer {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            margin: 40px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .algorithm {
+            min-width: fit-content;
+            height: fit-content;
+            font-family: 'Roboto Mono', 'Courier New', Courier, monospace;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sortContainer">
+        <pre class="algorithm"><b>SelectionSort(A[0..n−1])</b>
+    for i ← 0 to n − 2
+    minIndex ← i
+
+    for j ← i + 1 to n − 1
+        if A[j] &lt; A[minIndex] then
+        minIndex ← j
+        
+    if minIndex ≠ i then
+        swap A[i] and A[minIndex]
+        </pre>
+        <div id="selection-sort-widget">
+            <button class="btn btn-primary" id="startSelectionSort" onclick="startSelSort()">Animate!</button>
+        </div>
+    </div>
+
+    <div class="sortContainer">
+        <pre class="algorithm"><b>InsertionSort(A[0..n−1])</b>
+    for i ← 1 to n − 1
+        tmp ← A[i]
+        j ← i − 1
+
+        while j ≥ 0 and A[j] &gt; tmp
+            A[j + 1] ← A[j]
+            j ← j − 1
+
+        A[j + 1] ← tmp
+        </pre>
+        <div id="insertion-sort-widget">
+            <button class="btn btn-primary" id="startInsertionSort" onclick="startInsertionSort()">Animate!</button>
+        </div>
+    </div>
+    
+    <div class="sortContainer">
+        <pre class="algorithm"><b>MergeSort(A[0..n−1])</b>
+    Create S[0..n−1] // a scratch array
+    MergeSortHelper(A, S, 0, n − 1)
+<br>
+<b>MergeSortHelper(A, S, left, right)</b>
+    if left ≥ right then
+        return // Nothing to do
+
+    mid ← floor((left + right) / 2)
+
+    MergeSortHelper(A, S, left, mid)      // Merge sort left half
+    MergeSortHelper(A, S, mid + 1, right) // Merge sort right half
+
+    Merge(A, S, left, mid, right)
+
+<b>Merge(A, S, left, mid, right)</b>
+    i ← left          // pointer for left half
+    j ← mid + 1       // pointer for right half
+    k ← left          // pointer for scratch array
+
+    // Merge sorted data from each half into the scratch array in sorted order
+    while i ≤ mid and j ≤ right
+        // Compare the current elements from each half, moving smallest to scratch
+        if A[i] ≤ A[j] then
+            S[k] ← A[i]
+            i ← i + 1
+        else
+            S[k] ← A[j]
+            j ← j + 1
+    
+        k ← k + 1
+
+    // If there are more elements in the left half, move them to the scratch
+    while i ≤ mid
+        S[k] ← A[i]
+        i ← i + 1
+        k ← k + 1
+
+    // If there are more elements in the right half, move them to the scratch
+    while j ≤ right
+        S[k] ← A[j]
+        j ← j + 1
+        k ← k + 1
+
+    // Move data from scratch array back to original array
+    for m ← left to right
+        A[m] ← S[m]
+        </pre>
+        <div id="merge-scratch-widget">
+          <button class="btn btn-primary" id="startMergeSort" onclick="startMergeSort()">Animate!</button>
+        </div>
+    </div>
+<script type="text/javascript">
+
+// Load Anime.js if not already loaded
+function loadAnime(callback) {
+    if (window.anime) return callback();
+
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js';
+    script.onload = callback;
+    document.body.appendChild(script);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function swapBars(i, j, barContainer, barHeights) {
+    const bars = barContainer.children;
+    const barI = bars[i];
+    const barJ = bars[j];
+    const barIHeight = barHeights[i];
+    const barJHeight = barHeights[j];
+    barHeights[i] = barJHeight;
+    barHeights[j] = barIHeight;
+
+    anime({
+        targets: barI,
+        duration: 300,
+        easing: 'easeInOutQuad',
+        backgroundColor: '#2ecc71',
+        height: barJHeight
+    });
+    anime({
+        targets: barJ,
+        duration: 300,
+        easing: 'easeInOutQuad',
+        backgroundColor: '#2ecc71',
+        height: barIHeight
+    });
+}
+
+function startSelSort() {
+    // Create styles dynamically
+    const style = document.createElement("style");
+    style.textContent = `
+        .sort-container {
+            font-family: sans-serif;
+            color: #fff;
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            width: 500px;
+        }
+        .sort-title {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .bar-container {
+            display: flex;
+            align-items: flex-end;
+            height: 200px;
+            gap: 4px;
+            margin: auto;
+            width: fit-content;
+        }
+        .sort-bar {
+            width: 20px;
+            background: dodgerblue;
+            transition: background 0.3s, height 0.3s;
+        }
+        .sort-bar.active {
+            border: 2px dashed #00ffff;
+            box-sizing: border-box;
+        }
+        .sort-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .sort-buttons button {
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sort-buttons button:hover {
+            background: #666;
+        }
+        .sort-status {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+    `;
+    document.body.appendChild(style);
+
+    loadAnime(selSort);
+}
+
+function selSort(){
+    const container = document.getElementById('selection-sort-widget');
+    container.innerHTML = `
+        <div class="sort-container">
+        <h3 class="sort-title">Selection Sort</h3>
+        <div class="bar-container" id="bar-container"></div>
+        <div class="sort-buttons">
+            <button id="shuffle">Shuffle</button>
+            <button id="next">Next Step</button>
+        </div>
+        <div class="sort-status" id="sort-status">Press "Next Step" to begin.</div>
+        </div>
+    `;
+
+    const NUM_BARS = 10;
+    let barHeights = [];
+    let i = 1, j = 0;
+    let tmpHeight = 0;
+    let sorting = false, finished = false;
+    let shifting = false;
+    
+    const barContainer = container.querySelector("#bar-container");
+    const status = container.querySelector("#sort-status");
+    const shuffleBtn = container.querySelector("#shuffle");
+    const resetBtn = container.querySelector("#reset");
+    const nextBtn = container.querySelector("#next");
+
+    function resetSort() {
+        i = 0;
+        j = i + 1;
+        minIndex = i;
+        sorting = true;
+        finished = false;
+        
+        createBars();
+        clearBarColors();
+
+        status.textContent = "Press 'Next Step' to begin.";
+    }
+
+    function createBars() {
+        barHeights = Array.from({ length: NUM_BARS }, () => Math.floor(Math.random() * 150 + 30));
+
+        barContainer.innerHTML = '';
+        barHeights.forEach(height => {
+            const bar = document.createElement('div');
+            bar.classList.add('sort-bar');
+            bar.style.height = `${height}px`;
+            barContainer.appendChild(bar);
+        });
+    }
+
+    function clearBarColors() {
+        [...barContainer.children].forEach(bar => {
+            bar.style.background = 'dodgerblue';
+            bar.classList.remove('active');
+        });
+    }
+
+    async function nextStep() {
+        if (!sorting || finished) return;
+
+        const bars = barContainer.children;
+        clearBarColors();
+
+        if (i >= NUM_BARS - 1) {
+            bars[i].style.background = '#2ecc71';
+            bars[NUM_BARS - 1].style.background = 'dodgerblue';
+            status.textContent = "Sorting complete!";
+            sorting = false;
+            finished = true;
+            return;
+        }
+
+        bars[i].style.background = '#3498db';
+        bars[i].classList.add('active');
+        bars[minIndex].style.background = 'red';
+
+        if (j < NUM_BARS) {
+            bars[j].style.background = 'yellow';
+            const h1 = barHeights[j];
+            const h2 = barHeights[minIndex];
+            status.textContent = `Comparing index ${j} (${h1}) with min index ${minIndex} (${h2})`;
+
+            if (h1 < h2) {
+                minIndex = j;
+                status.textContent += ` → New min index: ${minIndex}`;
+            }
+
+            j++;
+        } else {
+            if (minIndex !== i) {
+                await swapBars(i, minIndex, barContainer, barHeights);
+                status.textContent = `Swapped index ${i} and ${minIndex}`;
+            } else {
+                status.textContent = `No swap needed at index ${i}`;
+            }
+
+            bars[i].style.background = '#2ecc71';
+            i++;
+            minIndex = i;
+            j = i + 1;
+        }
+    }
+
+    shuffleBtn.onclick = resetSort;
+    nextBtn.onclick = nextStep;
+
+    resetSort();
+};
+
+function startInsertionSort() {
+    // Create styles dynamically
+    const style = document.createElement("style");
+    style.textContent = `
+        .sort-container {
+            font-family: sans-serif;
+            color: #fff;
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            width: 500px;
+        }
+        .sort-title {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .bar-container {
+            display: flex;
+            align-items: flex-end;
+            height: 200px;
+            gap: 4px;
+            margin: auto;
+            width: fit-content;
+  			position: relative;
+        }
+        .bar-container::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 0;
+            border-top: 2px dotted orange;
+            top: var(--temp-line-top, 0px);
+            opacity: var(--line-opacity, 0);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .sort-bar {
+            width: 20px;
+            background: dodgerblue;
+            transition: background 0.3s, height 0.3s;
+        }
+        .temp-bar {
+            margin-left: 20px;
+            background: orange;
+            transition: height 0.3s;
+        }
+        .sort-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .sort-buttons button {
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .sort-buttons button:hover {
+            background: #666;
+        }
+        .sort-status {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+    `;
+    document.body.appendChild(style);
+
+    loadAnime(insertionSort);
+}
+
+function insertionSort() {
+    const container = document.getElementById('insertion-sort-widget');
+    container.innerHTML = `
+        <div class="sort-container">
+        <h3 class="sort-title">Insertion Sort</h3>
+        <div class="bar-container" id="bar-container"></div>
+        <div class="sort-buttons">
+            <button id="shuffle">Shuffle</button>
+            <button id="next">Next Step</button>
+        </div>
+        <div class="sort-status" id="sort-status">Press "Next Step" to begin.</div>
+        </div>
+    `;
+
+    const NUM_BARS = 10;
+    let barHeights = [];
+    let i = 1, j = 0;
+    let tmpHeight = 0;
+    let sorting = false, finished = false, shifting = false, comparisonReady = false;
+    let tempBar = null;
+
+    const barContainer = container.querySelector("#bar-container");
+    const status = container.querySelector("#sort-status");
+    const shuffleBtn = container.querySelector("#shuffle");
+    const resetBtn = container.querySelector("#reset");
+    const nextBtn = container.querySelector("#next");
+
+    function createBars() {
+        barContainer.innerHTML = '';
+        
+        barHeights = Array.from({ length: NUM_BARS }, () => Math.floor(Math.random() * 150 + 30));
+        barHeights.forEach(height => {
+            const bar = document.createElement('div');
+            bar.classList.add('sort-bar');
+            bar.style.height = `${height}px`;
+            barContainer.appendChild(bar);
+        });
+
+        tempBar = document.createElement('div');
+        tempBar.classList.add('sort-bar', 'temp-bar');
+        tempBar.style.height = '0px';
+        barContainer.appendChild(tempBar);
+
+    }
+
+    function clearBarColors() {
+        [...barContainer.children].forEach(bar => {
+            bar.style.background = 'dodgerblue';
+        });
+        tempBar.style.background = 'orange';
+        tempBar.style.opacity = 1;
+    }
+
+    function shuffleBars() {
+        createBars();
+        resetSort();
+        status.textContent = "Press 'Next Step' to begin.";
+    }
+
+    function resetSort() {
+        i = 0;
+        j = i + 1;
+        minIndex = i;
+        sorting = true;
+        finished = false;
+        clearBarColors();
+    }
+
+    async function nextStep() {
+        if (!sorting || finished) return;
+
+        const bars = barContainer.children;
+        clearBarColors();
+
+        if (i >= NUM_BARS) {
+            status.textContent = "Sorting complete!";
+            sorting = false;
+            finished = true;
+            tempBar.style.opacity = 0.3;
+            return;
+        }
+
+        if (!shifting) {
+            // New iteration: capture tmp and start comparing backward
+            tmpHeight = barHeights[i];
+            tempBar.style.height = `${tmpHeight}px`;
+  
+            const tempLine = barContainer;
+            const containerHeight = barContainer.offsetHeight;
+            const lineTop = containerHeight - tmpHeight;
+
+            barContainer.style.setProperty('--temp-line-top', `${lineTop}px`);
+            barContainer.style.setProperty('--line-opacity', 1);
+
+            
+            tempBar.style.opacity = 1;
+            j = i - 1;
+            shifting = true;
+
+            bars[i].style.background = 'orange';
+            status.textContent = `Inserting value from index ${i}`;
+            return;
+        }
+
+        if (j >= 0 && !comparisonReady) {
+            // Step 1: highlight the bar being compared
+            bars[j].style.background = 'yellow';
+            tempBar.style.background = 'orange';
+            status.textContent = `Comparing tmp with A[${j}]`;
+
+            comparisonReady = true;
+            return;
+        }
+        if (j >= 0 && barHeights[j] > tmpHeight && comparisonReady) {
+            // Step 2: do the shift
+            bars[j + 1].style.height = bars[j].style.height;
+            barHeights[j + 1] = barHeights[j];
+            bars[j + 1].style.background = '#2ecc71';            
+            bars[j + 1].style.opacity = 1;
+            bars[j].style.background = 'dodgerblue'; // reset highlight
+            bars[j].style.opacity = 0.3;
+            status.textContent = `Shifting index ${j} to ${j + 1}`;
+            j--;
+            comparisonReady = false;
+        } else {
+            // Insert tmpHeight at position j+1
+            bars[j + 1].style.height = `${tmpHeight}px`;
+            barHeights[j + 1] = tmpHeight;
+            bars[j + 1].style.background = '#2ecc71'; // mark sorted
+            bars[j + 1].style.opacity = 1;
+            status.textContent = `Inserted at index ${j + 1}`;
+            tempBar.style.opacity = 0.3;
+			barContainer.style.setProperty('--line-opacity', 0);
+            i++;
+            shifting = false;
+            comparisonReady = false;
+        }
+    }
+
+    shuffleBtn.onclick = shuffleBars;
+    nextBtn.onclick = nextStep;
+
+    shuffleBars();
+}
+
+function startMergeSort() {
+    const style = document.createElement("style");
+    style.textContent = `
+        .merge-widget {
+            font-family: sans-serif;
+            color: #fff;
+            background: #111;
+            padding: 20px;
+            border-radius: 10px;
+            width: fit-content;
+            min-width: 400px;
+        }
+        .merge-title {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .bar-row {
+            display: flex;
+            align-items: flex-end;
+            height: 150px;
+            gap: 4px;
+            margin-bottom: 10px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .bar {
+            width: 10px;
+            background: dodgerblue;
+            transition: background 0.3s, height 0.3s;
+        }
+        .scratch-bar {
+            background: darkorange;
+        }
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .controls button {
+            background: #444;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .controls button:hover {
+            background: #666;
+        }
+        .status {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .highlighted {
+            outline: 2px solid #00ffff;
+        }
+        .splitting {
+            outline: 2px dashed #a56fff;
+        }
+        .dimmed {
+            opacity: 0.3;
+        }
+        .midpoint {
+            position: relative;
+        }
+        .midpoint::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -3px;
+            width: 3px;
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                to top,
+                red,
+                red 5px,
+                transparent 5px,
+                transparent 10px
+            );
+        }
+    `;
+    document.body.appendChild(style);
+
+    loadAnime(mergeSort);
+};
+
+function mergeSort() {
+    const container = document.getElementById("merge-scratch-widget");
+    container.innerHTML = `
+        <div class="merge-widget">
+        <h3 class="merge-title">Merge Sort</h3>
+        <div class="bar-row" id="main-array"></div>
+        <div class="bar-row" id="scratch-array"></div>
+        <div class="controls">
+            <button id="shuffle">Shuffle</button>
+            <button id="next">Next Step</button>
+        </div>
+        <div class="status" id="merge-status">Press "Next Step" to begin.</div>
+        </div>
+    `;
+
+    const mainArrayEl = container.querySelector("#main-array");
+    const scratchArrayEl = container.querySelector("#scratch-array");
+    const statusEl = container.querySelector("#merge-status");
+
+    let original = [];
+    let array = [];
+    let scratch = [];
+    let steps = [];
+    let stepIndex = 0;
+    let sorting = false;
+
+    const NUM_BARS = 10;
+
+    function generateArray() {
+        array = Array.from({ length: NUM_BARS }, () => Math.floor(Math.random() * 100 + 30));
+        original = new Array(array.length).fill(0)
+        for (let i = 0; i < array.length; i++) {
+            original[i] = array[i];
+        }
+    }
+
+    function renderBars() {
+        mainArrayEl.innerHTML = '';
+        scratchArrayEl.innerHTML = '';
+
+        array.forEach(value => {
+        const bar = document.createElement('div');
+        bar.classList.add('bar');
+        bar.style.height = `${value}px`;
+        mainArrayEl.appendChild(bar);
+        });
+
+        for (let i = 0; i < array.length; i++) {
+        const bar = document.createElement('div');
+        bar.classList.add('bar', 'scratch-bar');
+        //bar.classList.remove('dimmed');
+        bar.style.height = '0px';
+        bar.style.opacity = 1;
+        scratchArrayEl.appendChild(bar);
+        }
+    }
+
+    // Recursively generate steps to display for merge sort
+    function generateSteps(left, right) {
+        if (left >= right) return;
+
+    
+        const mid = Math.floor((left + right) / 2);        
+        steps.push({ type: 'split-range', left, right, mid });
+        generateSteps(left, mid);
+        generateSteps(mid + 1, right);
+
+        let i = left;
+        let j = mid + 1;
+        let k = left;
+    
+        steps.push({ type: 'highlight-range', left, right, mid });
+    
+        while (i <= mid && j <= right) {
+            steps.push({ type: 'compare', i, j });
+            if (array[i] <= array[j]) {
+                steps.push({ type: 'scratch-write', to: k, from: i, value: array[i] });
+                scratch[k++] = array[i++];
+            } else {
+                steps.push({ type: 'scratch-write', to: k, from: j, value: array[j] });
+                scratch[k++] = array[j++];
+            }
+        }
+
+        while (i <= mid) {
+            steps.push({ type: 'scratch-write', to: k, from: i, value: array[i], option: 'no-compare' });
+            scratch[k++] = array[i++];
+        }
+
+        while (j <= right) {
+            steps.push({ type: 'scratch-write', to: k, from: j, value: array[j], option: 'no-compare' });
+            scratch[k++] = array[j++];
+        }
+
+        for (let m = left; m <= right; m++) {
+            steps.push({ type: 'main-write', index: m, value: scratch[m] });
+            array[m] = scratch[m];
+        }
+    }
+
+    async function nextStep() {
+        if (!sorting || stepIndex >= steps.length) {
+            clearHighlights();
+            statusEl.textContent = "Merge Sort complete!";
+            sorting = false;
+            return;
+        }
+
+        const step = steps[stepIndex];
+        const mainBars = mainArrayEl.children;
+        const scratchBars = scratchArrayEl.children;
+
+        switch (step.type) {
+        case 'compare':
+            mainBars[step.i].style.backgroundColor = 'yellow';
+            mainBars[step.j].style.backgroundColor = 'yellow';
+            statusEl.textContent = `Comparing index ${step.i} and ${step.j}`;
+            break;
+            
+        case 'scratch-write':
+            if ('no-compare' == step.option) {
+                mainBars[step.from].style.backgroundColor = 'hotpink';
+            }
+    
+            anime({
+                targets: mainBars[step.from],
+                opacity: 0.6,
+                delay: 300,
+                duration: 300,
+                easing: 'easeOutQuad'
+            });
+    
+            anime({
+                targets: scratchBars[step.to],
+                height: `${step.value}px`,
+                opacity: 1,
+                duration: 300,
+                easing: 'easeInOutQuad'
+            });
+    
+            statusEl.textContent = `Copying value from index ${step.from} to scratch[${step.to}]`;
+            break;
+
+        case 'main-write':
+            anime({
+                targets: mainBars[step.index],
+                height: `${step.value}px`,
+                opacity: 1,
+                duration: 300,
+                easing: 'easeInOutQuad'
+            });
+            mainBars[step.index].style.background = '#2ecc71';
+            anime({
+                targets: scratchBars[step.index],
+                opacity: 0.3,
+                duration: 400,
+                easing: 'easeOutQuad'
+            });
+
+            statusEl.textContent = `Writing back to main array at index ${step.index}`;
+            break;
+    
+        case 'highlight-range':
+            clearHighlights()
+    
+            // Apply highlight to current range
+            for (let i = step.left; i <= step.right; i++) {
+                mainArrayEl.children[i].classList.add('highlighted');
+                scratchArrayEl.children[i].classList.add('highlighted');                                                 
+                mainArrayEl.children[i].classList.remove('splitting');
+                scratchArrayEl.children[i].classList.remove('splitting');
+            }
+                                                    
+            // Mark the midpoint (inclusive of left side)
+            mainArrayEl.children[step.mid].classList.add('midpoint');
+
+            statusEl.textContent = `Merging range [${step.left}, ${step.right}]`;
+            break;
+
+        case 'split-range':
+            clearHighlights()
+
+            for (let i = step.left; i <= step.right; i++) {
+                mainArrayEl.children[i].classList.add('splitting');
+            }
+
+            statusEl.textContent = `Recursing on range [${step.left}, ${step.right}]`;
+            break;
+        }
+
+        stepIndex++;
+    }
+
+    function clearHighlights() {
+        for (const bar of mainArrayEl.children) {
+        bar.classList.remove('highlighted');
+        bar.classList.remove('midpoint');
+        bar.classList.remove('splitting');
+        }
+        for (const bar of scratchArrayEl.children) {
+        bar.classList.remove('highlighted');
+        bar.classList.remove('midpoint');
+        }
+    }
+    
+    function resetSort() {
+        steps = [];
+        stepIndex = 0;
+        generateArray();
+        scratch = new Array(array.length).fill(0);
+        renderBars();
+        generateSteps(0, array.length - 1);
+        sorting = true;
+        statusEl.textContent = 'Press "Next Step" to begin.';
+    }
+    
+    container.querySelector("#shuffle").onclick = () => {
+        generateArray();
+        renderBars();
+        resetSort();
+        statusEl.textContent = "Press 'Next Step' to begin.";
+    };
+
+    container.querySelector("#next").onclick = nextStep;
+
+    resetSort();
+}
+</script>
+</body>
+</html>
