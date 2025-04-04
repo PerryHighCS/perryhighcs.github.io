@@ -47,14 +47,14 @@
     <div class="sortContainer">
         <pre class="algorithm"><b>SelectionSort(A[0..n−1])</b>
     for i ← 0 to n − 2
-    	minIndex ← i
+        minIndex ← i
 
-    	for j ← i + 1 to n − 1
-	    	if A[j] &lt; A[minIndex] then
-	    		minIndex ← j
+        for j ← i + 1 to n − 1
+	    if A[j] &lt; A[minIndex] then
+	    	minIndex ← j
 	        
-	    	if minIndex ≠ i then
-	        	swap A[i] and A[minIndex]
+        if minIndex ≠ i then
+	    swap A[i] and A[minIndex]
         </pre>
         <div id="selection-sort-widget">
             <button class="btn btn-primary" id="startSelectionSort" onclick="startSelSort()">Animate!</button>
